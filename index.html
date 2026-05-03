@@ -1,21 +1,21 @@
-<!!DOCTYPE html>
-<!-- TRAYECTORIAS CUIDADAS · Zona 5310 Oeste · Supervisora: Gabriela de los Ángeles Navarrete -->
+!DOCTYPE html>
+<!-- TRAYECTORIAS CUIDADAS · Aprendizajes Significativos · José María Paz -->
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Trayectorias Cuidadas · Zona 5310 Oeste</title>
+<title>Trayectorias Cuidadas · José María Paz</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const firebaseConfig = {
-  apiKey: "AIzaSyCAfJFqwUVBs9cy03huzI7LDQyaPOPx03M",
-  authDomain: "trayectorias-cuidadas.firebaseapp.com",
-  projectId: "trayectorias-cuidadas",
-  storageBucket: "trayectorias-cuidadas.firebasestorage.app",
-  messagingSenderId: "536540161216",
-  appId: "1:536540161216:web:72f8b79fb820c0d6537925"
+  apiKey: "AIzaSyDzBcWxsKUOdyuFUpJa5r8ZXfyERZHUW14",
+  authDomain: "jose-maria-paz.firebaseapp.com",
+  projectId: "jose-maria-paz",
+  storageBucket: "jose-maria-paz.firebasestorage.app",
+  messagingSenderId: "617808268570",
+  appId: "1:617808268570:web:7338eb999a3cbdd812b0a3"
 };
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
@@ -51,60 +51,25 @@ td{padding:7px 10px;border-bottom:1px solid #e2e8f0;vertical-align:middle}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:#f1f5f9}
 ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
-@media print{
-  .no-print{display:none!important}
-  body{background:#fff}
-  .print-page{page-break-after:always;padding:20px}
-}
+@media print{.no-print{display:none!important}body{background:#fff}}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
-const ESCUELAS=[
-  {id:"531121",nombre:"MANUEL SOLARES",cue:"EE0550865"},
-  {id:"531100",nombre:"SEDE DE INSPECCIÓN 5310",cue:"EE0550926"},
-  {id:"531122",nombre:"SANTIAGO DE LINIERS",cue:"EE0550864"},
-  {id:"531124",nombre:"DOMINGO FAUSTINO SARMIENTO (531124)",cue:"EE0550891"},
-  {id:"531126",nombre:"VICENTE LOPEZ Y PLANES",cue:"EE0550875"},
-  {id:"531127",nombre:"VICTOR MERCANTE",cue:"EE0550930"},
-  {id:"531128",nombre:"COMANDANTE ESPORA",cue:"EE0550931"},
-  {id:"531131",nombre:"SAN MARTIN",cue:"EE0550866"},
-  {id:"531132",nombre:"ASOCIACION DE MAYO",cue:"EE0550912"},
-  {id:"531134",nombre:"CATALINA BIZA DE BARON",cue:"EE0550894"},
-  {id:"531135",nombre:"PABLO PIZZURNO",cue:"EE0550907"},
-  {id:"531136",nombre:"ENRIQUE LARRETA",cue:"EE0550922"},
-  {id:"531137",nombre:"CURA ELEODORO FIERRO",cue:"EE0550924"},
-  {id:"531141",nombre:"PRESIDENTE YRIGOYEN",cue:"EE0550867"},
-  {id:"531142",nombre:"DOMINGO FAUSTINO SARMIENTO (531142)",cue:"EE0550896"},
-  {id:"531143",nombre:"ATAHUALPA YUPANQUI",cue:"EE0550995"},
-  {id:"531144",nombre:"SIN NOMBRE",cue:"EE0550997"},
-  {id:"531151",nombre:"JOSE MARIA PAZ",cue:"EE0550868"},
-  {id:"531152",nombre:"FRAY LUIS BELTRAN",cue:"EE0550876"},
-  {id:"531153",nombre:"REPUBLICA ITALIANA",cue:"EE0550933"},
-  {id:"531154",nombre:"GENERAL BELGRANO",cue:"EE0550934"},
-  {id:"531155",nombre:"JOSE HERNANDEZ",cue:"EE0550909"},
-  {id:"531156",nombre:"JULIO ROBERTO BARRIENTOS",cue:"EE0550982"},
-  {id:"531161",nombre:"MARIANO MORENO",cue:"EE0550873"},
-  {id:"531163",nombre:"BERNARDO DE MONTEAGUDO",cue:"EE0550878"},
-  {id:"531171",nombre:"JOAQUIN VICTOR GONZALEZ",cue:"EE0550913"},
-  {id:"531172",nombre:"JUAN BAUTISTA CABRAL",cue:"EE0550906"},
-  {id:"531173",nombre:"24 DE SETIEMBRE",cue:"EE0550917"},
-  {id:"531174",nombre:"HIPOLITO VIEYTES",cue:"EE0550892"},
-  {id:"531175",nombre:"CRISTOBAL COLON",cue:"EE0550919"},
-  {id:"531176",nombre:"ALFONSINA STORNI",cue:"EE0550929"},
-  {id:"531179",nombre:"PADRE JOSE FELIPE BUTELER",cue:"EE0550925"},
-  {id:"531133",nombre:"DOCTOR NICOLAS AVELLANEDA",cue:"EE0550902"},
-  {id:"531123",nombre:"JUAN JOSE PASO",cue:"EE0550890"},
-];
+// ── SECCIONES POR GRADO ──────────────────────────────
+const GRADOS = ["1°","2°","3°","4°","5°","6°"];
+const SECCIONES = ["A","B","C","D"];
+const CORTES = ["Mayo","Agosto","Diciembre"];
+const LOGRO = ["Consolidado","En proceso","Incipiente"];
+const NIV_ESCRITURA = ["Diferenciada","Silábica","Silábica alfabética","Cuasialfabética","Alfabética"];
+const NIV_LECTURA_12 = ["Diferenciada","Silábica","Alfabética"];
 
-const GRADOS=["1°","2°","3°","4°","5°","6°"];
-const CORTES=["Mayo","Agosto","Diciembre"];
-const LOGRO=["Consolidado","En proceso","Incipiente"];
-const NIV_ESCRITURA=["Diferenciada","Silábica","Silábica alfabética","Cuasilábica","Alfabética"];
-const NIV_LECTURA_12=["Diferenciada","Silábica","Alfabética"];
+// Generar lista de secciones: 1°A, 1°B, ... 6°D
+const SECCIONES_LIST = [];
+GRADOS.forEach(g => SECCIONES.forEach(s => SECCIONES_LIST.push({id:`${g}${s}`, grado:g, seccion:s, label:`${g} Sección ${s}`})));
 
-const INDS={
+const INDS = {
   lengua:{
     "1°":["Escribe su nombre de manera autónoma","Diferencia dibujos, números y letras","Identifica palabras significativas","Formula hipótesis de escritura (cantidad y variedad)","Participa en intercambios orales y escucha relatos"],
     "2°":["Respeta turnos de habla","Recupera información explícita","Coherencia temática en la conversación","Realiza comentarios pertinentes","Lee convencionalmente textos breves","Escribe convencionalmente con intención comunicativa"],
@@ -117,32 +82,80 @@ const INDS={
     "1°":["Recita la serie numérica oral hasta 50","Cuenta colecciones con correspondencia uno a uno","Escribe números convencionalmente hasta 30","Utiliza el conteo para medir longitudes y capacidades","Reconoce y continúa patrones geométricos (ABAB)","Compone configuraciones con figuras geométricas básicas"],
     "2°":["Calcula sumas de números naturales de una o dos cifras","Determina cantidad de elementos mediante conteo y sobreconteo","Registra con un número la medida de longitud y capacidad","Identifica semejanzas y diferencias entre figuras planas","Compone configuraciones con figuras geométricas básicas"],
     "3°":["Usa suma y resta con números naturales hasta 1000","Comunica y ordena números naturales en cuantificación y medición","Diferencia figuras geométricas (triángulos, cuadriláteros, prismas, pirámides)"],
-    "4°":["Reconoce la operación (suma o resta) adecuada para resolver situaciones","Emplea algoritmo convencional de multiplicación","Elabora procedimientos propios para cociente en repartos y particiones","Lee y escribe números hasta aproximadamente 10.000","Elabora instrucciones para construir triángulos y cuadriláteros"],
+    "4°":["Reconoce la operación adecuada para resolver situaciones","Emplea algoritmo convencional de multiplicación","Elabora procedimientos propios para cociente en repartos y particiones","Lee y escribe números hasta aproximadamente 10.000","Elabora instrucciones para construir triángulos y cuadriláteros"],
     "5°":["Lee, escribe y ordena números naturales de distinta cantidad de cifras","Ubica y encuadra números en la recta numérica","Reconoce el valor posicional al componer y descomponer números","Identifica datos relevantes y reconoce si usar suma o resta","Explica la estrategia y controla si el resultado es razonable","Reconoce cuándo usar multiplicación o división","Resuelve problemas de proporcionalidad y organizaciones rectangulares"],
     "6°":["Lee una situación y diferencia información relevante de irrelevante","Determina múltiplos y divisores comunes entre dos o más números","Comunica información mínima para reproducir cuadriláteros paralelogramos, trapecios y romboides"],
   }
 };
 
-// ── ESTADO ─────────────────────────────────────────────
-let STATE={modo:"inicio",escuela:null,tab:"carga",allData:{},loading:false,busq:"",modal:null,del:null,
-  filtroGrado:"",busqEst:"",tablaGrado:"1°",supArea:"lengua",supGrado:"1°",supSel:null,corte:"Mayo"};
-function setState(p){Object.assign(STATE,typeof p==="function"?p(STATE):p);render();}
+// ── SEMÁFORO ─────────────────────────────────────────
+function semaforo(estudiantes, grado, area){
+  const inds = INDS[area][grado]||[];
+  if(!inds.length || !estudiantes.length) return `<span style="color:#cbd5e1;font-size:11px">—</span>`;
+  let c=0,p=0,i=0,total=0;
+  estudiantes.forEach(e=>{
+    inds.forEach(ind=>{
+      const v=e.indicadores?.[`${area}_${grado}_${ind}`];
+      if(v){
+        total++;
+        if(v==="Consolidado")c++;
+        else if(v==="En proceso")p++;
+        else if(v==="Incipiente")i++;
+      }
+    });
+  });
+  if(!total) return `<span style="color:#cbd5e1;font-size:11px">Sin datos</span>`;
+  const pctC=Math.round(c/total*100);
+  const pctP=Math.round(p/total*100);
+  const pctI=Math.round(i/total*100);
+  let color,emoji,label;
+  if(pctC>=50){color="#16a34a";emoji="🟢";label=`Consolidado ${pctC}%`;}
+  else if(pctP>=50){color="#d97706";emoji="🟡";label=`En proceso ${pctP}%`;}
+  else{color="#dc2626";emoji="🔴";label=`Incipiente ${pctI}%`;}
+  return `<div style="display:flex;align-items:center;gap:6px">
+    <span style="font-size:18px">${emoji}</span>
+    <div>
+      <div style="font-size:11px;font-weight:700;color:${color}">${label}</div>
+      <div style="display:flex;height:6px;width:80px;border-radius:3px;overflow:hidden;margin-top:2px">
+        <div style="width:${pctC}%;background:#16a34a"></div>
+        <div style="width:${pctP}%;background:#d97706"></div>
+        <div style="width:${pctI}%;background:#dc2626"></div>
+      </div>
+    </div>
+  </div>`;
+}
 
+// ── ESTADO ───────────────────────────────────────────
+let STATE={
+  modo:"inicio",   // inicio | seccion | directivo
+  seccion:null,    // {id, grado, seccion, label}
+  tab:"carga",
+  allData:{},
+  loading:false,
+  busq:"",
+  modal:null,
+  del:null,
+  busqEst:"",
+  tablaGrado:"1°",
+  dirGrado:"1°",
+  dirSeccion:"A",
+  dirSel:null,
+  corte:"Mayo",
+};
+function setState(p){Object.assign(STATE,typeof p==="function"?p(STATE):p);render();}
 async function dbGet(k){return window.dbGet?window.dbGet(k):null;}
 async function dbSet(k,v){if(window.dbSet)await window.dbSet(k,v);}
 
-// ── HELPERS UI ──────────────────────────────────────────
+// ── HELPERS ──────────────────────────────────────────
 function badge(v){
   if(!v)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
   const c=v==="Consolidado"?"badge-c":v==="En proceso"?"badge-p":"badge-i";
   return`<span class="badge ${c}">${v}</span>`;
 }
-function badgeNivel(v,opciones){
+function badgeNivel(v){
   if(!v)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
-  const colors={"Diferenciada":"#7c3aed","Silábica":"#db2777","Silábica alfabética":"#ea580c","Cuasilábica":"#d97706","Alfabética":"#16a34a","Alfabética inicial":"#15803d"};
-  const colors12={"Diferenciada":"#7c3aed","Silábica":"#db2777","Alfabética":"#16a34a"};
-  const allColors={...colors,...colors12};
-  const col=allColors[v]||"#475569";
+  const m={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasilábica":"#d97706","Alfabética":"#16a34a"};
+  const col=m[v]||"#475569";
   return`<span style="background:${col}18;color:${col};border:1px solid ${col}44;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700">${v}</span>`;
 }
 function barra(c=0,p=0,i=0,t){
@@ -152,132 +165,89 @@ function barra(c=0,p=0,i=0,t){
 function leyenda(){
   return`<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">${[["#16a34a","Consolidado"],["#d97706","En proceso"],["#dc2626","Incipiente"]].map(([c,l])=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:7px;padding:4px 12px"><div style="width:10px;height:10px;border-radius:50%;background:${c}"></div>${l}</div>`).join("")}</div>`;
 }
-function semaforo(estudiantes,grado,area){
-  const inds=INDS[area][grado]||[];
-  if(!inds.length||!estudiantes.length)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
-  let c=0,p=0,i=0,total=0;
-  estudiantes.forEach(e=>{inds.forEach(ind=>{const v=e.indicadores?.[`${area}_${grado}_${ind}`];if(v){total++;if(v==="Consolidado")c++;else if(v==="En proceso")p++;else i++;}});});
-  if(!total)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
-  const pctC=Math.round(c/total*100),pctP=Math.round(p/total*100),pctI=Math.round(i/total*100);
-  let color,emoji,label;
-  if(pctC>=50){color="#16a34a";emoji="🟢";label=`${pctC}%`;}
-  else if(pctP>=50){color="#d97706";emoji="🟡";label=`${pctP}%`;}
-  else{color="#dc2626";emoji="🔴";label=`${pctI}%`;}
-  return`<div style="display:flex;align-items:center;gap:4px"><span style="font-size:14px">${emoji}</span><span style="font-size:10px;font-weight:700;color:${color}">${label}</span></div>`;
-}
-
-function semaforoEscuela(escId,area){
-  const ests=STATE.allData[escId]||[];
-  if(!ests.length)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
-  let c=0,p=0,i=0,total=0;
-  GRADOS.forEach(g=>{
-    const inds=INDS[area][g]||[];
-    ests.filter(e=>e.grado===g).forEach(e=>{inds.forEach(ind=>{const v=e.indicadores?.[`${area}_${g}_${ind}`];if(v){total++;if(v==="Consolidado")c++;else if(v==="En proceso")p++;else i++;}});});
-  });
-  if(!total)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
-  const pctC=Math.round(c/total*100),pctP=Math.round(p/total*100),pctI=Math.round(i/total*100);
-  let color,emoji,label;
-  if(pctC>=50){color="#16a34a";emoji="🟢";label=`${pctC}%`;}
-  else if(pctP>=50){color="#d97706";emoji="🟡";label=`${pctP}%`;}
-  else{color="#dc2626";emoji="🔴";label=`${pctI}%`;}
-  return`<div style="display:flex;align-items:center;gap:4px"><span style="font-size:14px">${emoji}</span><span style="font-size:10px;font-weight:700;color:${color}">${label}</span></div>`;
-}
-
 function loader(m="Cargando..."){return`<div class="loader"><div class="spinner"></div><p>${m}</p></div>`;}
-
-// ── GRÁFICO DE NIVELES ──────────────────────────────────
-function graficoNiveles(estudiantes, grado, corte){
-  const ests=estudiantes.filter(e=>e.grado===grado);
-  if(!ests.length) return`<div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">Sin datos para graficar</div>`;
-
-  // Escritura (1°2°3°)
-  const tieneEscritura=["1°","2°","3°"].includes(grado);
-  // Lectura (1°2°)
-  const tieneLectura12=["1°","2°"].includes(grado);
-  // Fluidez lectora (3°4°5°6°)
-  const tieneFluidez=["3°","4°","5°","6°"].includes(grado);
-
-  let html=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px">`;
-
-  if(tieneEscritura){
-    const nivs=NIV_ESCRITURA;
-    const counts=nivs.map(n=>ests.filter(e=>e[`escritura_${corte}`]===n).length);
-    const total=counts.reduce((a,b)=>a+b,0)||1;
-    const colors=["#7c3aed","#db2777","#ea580c","#d97706","#16a34a"];
-    html+=graficoBarra("📝 Nivel de Escritura",nivs,counts,total,colors);
-  }
-  if(tieneLectura12){
-    const nivs=NIV_LECTURA_12;
-    const counts=nivs.map(n=>ests.filter(e=>e[`lectura12_${corte}`]===n).length);
-    const total=counts.reduce((a,b)=>a+b,0)||1;
-    const colors=["#7c3aed","#db2777","#16a34a"];
-    html+=graficoBarra("📖 Nivel de Lectura",nivs,counts,total,colors);
-  }
-  if(tieneFluidez){
-    const dims=["Velocidad","Precisión","Prosodia"];
-    const colors=["#0ea5e9","#6366f1","#f59e0b"];
-    dims.forEach((dim,di)=>{
-      const vals=LOGRO;
-      const counts=vals.map(v=>ests.filter(e=>e[`fluidez_${dim}_${corte}`]===v).length);
-      const total=counts.reduce((a,b)=>a+b,0)||1;
-      const cols=["#16a34a","#d97706","#dc2626"];
-      html+=graficoBarra(`📖 Fluidez · ${dim}`,vals,counts,total,cols);
-    });
-  }
-  html+=`</div>`;
-  return html;
-}
-
-function graficoBarra(titulo,etiquetas,counts,total,colors){
-  return`<div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0">
-    <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:12px">${titulo}</div>
-    ${etiquetas.map((et,i)=>{
-      const pct=Math.round((counts[i]||0)/total*100);
-      return`<div style="margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-bottom:3px">
-          <span>${et}</span><span style="font-weight:700">${counts[i]||0} (${pct}%)</span>
-        </div>
-        <div style="height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden">
-          <div style="width:${pct}%;height:100%;background:${colors[i%colors.length]};border-radius:5px;transition:width .3s"></div>
-        </div>
-      </div>`;
-    }).join("")}
+function selectorCorte(){
+  return`<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+    <span style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">Corte:</span>
+    ${CORTES.map(c=>`<button onclick="setState({corte:'${c}'})" style="padding:5px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${STATE.corte===c?"#6366f1":"#e2e8f0"};background:${STATE.corte===c?"#6366f1":"#fff"};color:${STATE.corte===c?"#fff":"#64748b"}">${c}</button>`).join("")}
   </div>`;
 }
 
-// ── VISTAS PRINCIPALES ──────────────────────────────────
+// ── GRÁFICOS ─────────────────────────────────────────
+function graficoBarra(titulo,etiquetas,counts,total,colors){
+  return`<div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0">
+    <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:12px">${titulo}</div>
+    ${etiquetas.map((et,i)=>{const pct=Math.round((counts[i]||0)/total*100);return`
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-bottom:3px"><span>${et}</span><span style="font-weight:700">${counts[i]||0} (${pct}%)</span></div>
+        <div style="height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${colors[i%colors.length]};border-radius:5px"></div></div>
+      </div>`;}).join("")}
+  </div>`;
+}
+function graficoNiveles(estudiantes,grado,corte){
+  const ests=estudiantes.filter(e=>e.grado===grado);
+  if(!ests.length)return`<div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">Sin datos para graficar</div>`;
+  let html=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px">`;
+  if(["1°","2°","3°"].includes(grado)){
+    const counts=NIV_ESCRITURA.map(n=>ests.filter(e=>e[`escritura_${corte}`]===n).length);
+    html+=graficoBarra("✍️ Nivel de Escritura",NIV_ESCRITURA,counts,ests.length||1,["#7c3aed","#db2877","#ea580c","#d97706","#16a34a"]);
+  }
+  if(["1°","2°"].includes(grado)){
+    const counts=NIV_LECTURA_12.map(n=>ests.filter(e=>e[`lectura12_${corte}`]===n).length);
+    html+=graficoBarra("📖 Nivel de Lectura",NIV_LECTURA_12,counts,ests.length||1,["#7c3aed","#db2877","#16a34a"]);
+  }
+  if(["3°","4°","5°","6°"].includes(grado)){
+    ["Velocidad","Precisión","Prosodia"].forEach(dim=>{
+      const counts=LOGRO.map(v=>ests.filter(e=>e[`fluidez_${dim}_${corte}`]===v).length);
+      html+=graficoBarra(`📖 Fluidez · ${dim}`,LOGRO,counts,ests.length||1,["#16a34a","#d97706","#dc2626"]);
+    });
+  }
+  return html+`</div>`;
+}
+
+// ── VISTA INICIO ─────────────────────────────────────
 function vistaInicio(){
-  const fl=ESCUELAS.filter(e=>e.nombre.toLowerCase().includes(STATE.busq.toLowerCase()));
-  return`<div style="min-height:100vh;background:linear-gradient(160deg,#0f172a 0%,#1a3a5c 55%,#0f2438 100%);display:flex;align-items:center;justify-content:center;padding:24px">
-    <div style="width:100%;max-width:560px">
-      <div style="text-align:center;margin-bottom:32px">
-        <div style="display:inline-block;background:#ffffff10;border-radius:12px;padding:8px 20px;margin-bottom:14px;border:1px solid #ffffff1a">
-          <span style="color:#94a3b8;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase">Zona 5310 Oeste</span>
+  const fl=SECCIONES_LIST.filter(s=>s.label.toLowerCase().includes(STATE.busq.toLowerCase()));
+  const porGrado=GRADOS.map(g=>({grado:g,secs:fl.filter(s=>s.grado===g)})).filter(x=>x.secs.length);
+  return`<div style="min-height:100vh;background:linear-gradient(160deg,#0f172a 0%,#1a3558 55%,#0f2438 100%);display:flex;align-items:center;justify-content:center;padding:24px">
+    <div style="width:100%;max-width:600px">
+      <div style="text-align:center;margin-bottom:28px">
+        <div style="display:inline-block;background:#ffffff10;border-radius:12px;padding:8px 20px;margin-bottom:12px;border:1px solid #ffffff1a">
+          <span style="color:#94a3b8;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase">Escuela José María Paz</span>
         </div>
-        <h1 style="font-family:'Playfair Display',serif;color:#fff;font-size:38px;margin:0 0 4px;line-height:1.1">Trayectorias Cuidadas</h1>
-        <div style="color:#60a5fa;font-weight:700;font-size:16px;margin-bottom:6px">Sede de Inspección 5310 · Zona Oeste</div>
-        <div style="color:#94a3b8;font-size:13px;margin-bottom:10px">Supervisora: <span style="color:#e2e8f0;font-weight:700">Gabriela de los Ángeles Navarrete</span></div>
-        <div style="color:#94a3b8;font-size:12px;margin-bottom:10px">Docente Facilitadora: <span style="color:#60a5fa;font-weight:700">Gabriela Pafume · Programa M+M</span></div>
-        <p style="color:#64748b;font-size:14px;margin:0">Seguimiento nominal de trayectorias<br/>Instituciones Departamento Santa María · Lengua y Matemática · 1° a 6°</p>
+        <h1 style="font-family:'Playfair Display',serif;color:#fff;font-size:34px;margin:0 0 2px;line-height:1.1">Trayectorias Cuidadas</h1>
+        <div style="color:#60a5fa;font-weight:700;font-size:16px;margin-bottom:6px">Aprendizajes Significativos</div>
+        <div style="color:#94a3b8;font-size:12px;margin-bottom:4px">Directora: <span style="color:#e2e8f0;font-weight:700">María de Fátima Díaz</span></div>
+        <div style="color:#94a3b8;font-size:12px;margin-bottom:10px">Docente Facilitadora M+M: <span style="color:#e2e8f0;font-weight:700">Gabriela Pafume</span></div>
+        <p style="color:#64748b;font-size:13px;margin:0">Lengua y Matemática · 1° a 6° · Secciones A B C D<br/>Cortes: Mayo · Agosto · Diciembre</p>
       </div>
-      <div style="background:#ffffff0d;border:1px solid #ffffff18;border-radius:18px;padding:22px;margin-bottom:12px">
-        <div style="font-weight:700;color:#fff;font-size:15px;margin-bottom:4px">🏫 Acceso por Institución</div>
-        <p style="color:#64748b;font-size:13px;margin-bottom:14px">Seleccioná tu escuela para cargar datos</p>
-        <input value="${STATE.busq}" placeholder="Buscar escuela..." style="background:#ffffff12;color:#fff;border:1px solid #ffffff25;margin-bottom:10px" oninput="setState({busq:this.value})"/>
-        <div style="max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:5px">
-          ${fl.map(e=>`<button onclick="selEscuela('${e.id}')" style="background:#ffffff08;border:1px solid #ffffff18;border-radius:9px;padding:9px 14px;color:#e2e8f0;cursor:pointer;text-align:left;font-weight:600;font-size:13px;font-family:'Source Sans 3',sans-serif;display:flex;justify-content:space-between;align-items:center;gap:10px">
-            <span>${e.nombre}</span><span style="color:#475569;font-size:10px;font-weight:400;white-space:nowrap">${e.cue}</span>
-          </button>`).join("")}
+
+      <div style="background:#ffffff0d;border:1px solid #ffffff18;border-radius:18px;padding:20px;margin-bottom:12px">
+        <div style="font-weight:700;color:#fff;font-size:15px;margin-bottom:4px">📚 Acceso Docente por Sección</div>
+        <p style="color:#64748b;font-size:13px;margin-bottom:14px">Seleccioná tu grado y sección</p>
+        <input value="${STATE.busq}" placeholder="Buscar sección..." style="background:#ffffff12;color:#fff;border:1px solid #ffffff25;margin-bottom:12px" oninput="setState({busq:this.value})"/>
+        <div style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:10px">
+          ${porGrado.map(({grado,secs})=>`
+            <div>
+              <div style="color:#60a5fa;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px">${grado} Grado</div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">
+                ${secs.map(s=>`<button onclick="selSeccion('${s.id}')" style="background:#ffffff08;border:1px solid #ffffff18;border-radius:9px;padding:10px 6px;color:#e2e8f0;cursor:pointer;font-weight:700;font-size:13px;font-family:'Source Sans 3',sans-serif;text-align:center">
+                  Sección ${s.seccion}
+                </button>`).join("")}
+              </div>
+            </div>`).join("")}
         </div>
       </div>
-      <button onclick="irSupervisor()" style="width:100%;background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;border:none;border-radius:14px;padding:18px 24px;font-weight:700;font-size:16px;cursor:pointer;font-family:'Source Sans 3',sans-serif">
-        🔍 Vista Inspectora · Todas las escuelas
+
+      <button onclick="irDirectivo()" style="width:100%;background:linear-gradient(135deg,#065f46,#059669);color:#fff;border:none;border-radius:14px;padding:18px 24px;font-weight:700;font-size:16px;cursor:pointer;font-family:'Source Sans 3',sans-serif">
+        🏫 Vista Directivo · Toda la Escuela
       </button>
-      <p style="color:#1e3a5f;font-size:11px;text-align:center;margin-top:18px">Datos guardados en la nube · Firebase</p>
+      <p style="color:#1e3a5f;font-size:11px;text-align:center;margin-top:16px">Datos guardados en la nube · Firebase</p>
     </div>
   </div>`;
 }
 
+// ── HEADER ───────────────────────────────────────────
 function header(t,s){
   return`<div class="no-print" style="background:#0f172a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;border-bottom:1px solid #1e293b">
     <div><div style="font-family:'Playfair Display',serif;color:#fff;font-size:17px">${t}</div>${s?`<div style="color:#64748b;font-size:12px">${s}</div>`:""}</div>
@@ -285,45 +255,34 @@ function header(t,s){
   </div>`;
 }
 
-function vistaEscuela(){
-  const esc=STATE.escuela,ests=STATE.allData[esc.id]||[];
-  return`${header(esc.nombre,`${ests.length} estudiantes · Trayectorias Cuidadas Zona 5310 Oeste`)}
-  <div style="padding:24px;max-width:1200px;margin:0 auto">
+// ── VISTA SECCIÓN (DOCENTE) ──────────────────────────
+function vistaSeccion(){
+  const sec=STATE.seccion;
+  const ests=STATE.allData[sec.id]||[];
+  return`${header(`${sec.label} · José María Paz`,`${ests.length} estudiantes · Trayectorias Cuidadas`)}
+  <div style="padding:24px;max-width:1100px;margin:0 auto">
     <div class="no-print" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
       ${["carga","tabla","graficos"].map(t=>`<button class="btn-tab" onclick="setState({tab:'${t}'})"
         style="border-color:${STATE.tab===t?"#1e293b":"#e2e8f0"};background:${STATE.tab===t?"#1e293b":"#fff"};color:${STATE.tab===t?"#fff":"#64748b"}">
-        ${t==="carga"?"✏️ Cargar datos":t==="tabla"?"📊 Tabla por grado":"📈 Gráficos"}</button>`).join("")}
-      <button onclick="imprimirFicha()" class="btn-tab no-print" style="border-color:#6366f1;background:#6366f1;color:#fff">🖨️ Imprimir fichas PDF</button>
+        ${t==="carga"?"✏️ Cargar datos":t==="tabla"?"📊 Tabla":t==="graficos"?"📈 Gráficos":""}</button>`).join("")}
+      <button onclick="imprimirFicha()" class="btn-tab no-print" style="border-color:#6366f1;background:#6366f1;color:#fff">🖨️ Imprimir PDF</button>
     </div>
     ${leyenda()}
     <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001">
-      ${STATE.loading?loader():STATE.tab==="carga"?vistaCarga():STATE.tab==="tabla"?vistaTablaGrado():vistaGraficos()}
+      ${STATE.loading?loader():STATE.tab==="carga"?vistaCarga():STATE.tab==="tabla"?vistaTabla():vistaGraficosSeccion()}
     </div>
   </div>
   ${STATE.modal?modalEstudiante():""}${STATE.del?modalConfirmarBorrar():""}`;
 }
 
-function selectorCorte(onchange="setState({corte:this.value})"){
-  return`<div style="display:flex;gap:6px;align-items:center">
-    <span style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">Corte:</span>
-    ${CORTES.map(c=>`<button onclick="setState({corte:'${c}'})"
-      style="padding:5px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;
-      border-color:${STATE.corte===c?"#6366f1":"#e2e8f0"};background:${STATE.corte===c?"#6366f1":"#fff"};color:${STATE.corte===c?"#fff":"#64748b"}">${c}</button>`).join("")}
-  </div>`;
-}
-
 function vistaCarga(){
-  const escId=STATE.escuela.id;
-  const ests=(STATE.allData[escId]||[])
-    .filter(e=>(!STATE.filtroGrado||e.grado===STATE.filtroGrado)&&(!STATE.busqEst||`${e.apellido} ${e.nombre}`.toLowerCase().includes(STATE.busqEst.toLowerCase())))
+  const secId=STATE.seccion.id;
+  const ests=(STATE.allData[secId]||[])
+    .filter(e=>!STATE.busqEst||`${e.apellido} ${e.nombre}`.toLowerCase().includes(STATE.busqEst.toLowerCase()))
     .sort((a,b)=>a.apellido.localeCompare(b.apellido));
   return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
       <input style="width:180px" value="${STATE.busqEst}" placeholder="Buscar estudiante..." oninput="setState({busqEst:this.value})"/>
-      <select style="width:auto" onchange="setState({filtroGrado:this.value})">
-        <option value="" ${!STATE.filtroGrado?"selected":""}>Todos los grados</option>
-        ${GRADOS.map(g=>`<option ${STATE.filtroGrado===g?"selected":""}>${g}</option>`).join("")}
-      </select>
       ${selectorCorte()}
       <span style="font-size:12px;color:#94a3b8;font-weight:600">${ests.length} estudiantes</span>
     </div>
@@ -336,7 +295,7 @@ function vistaCarga(){
     <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
       <div>
         <div style="font-weight:700;font-size:14px;color:#1e293b">${e.apellido}, ${e.nombre}</div>
-        <div style="font-size:12px;color:#94a3b8">${e.grado}${e.seccion?` · Sección ${e.seccion}`:""}</div>
+        <div style="font-size:12px;color:#94a3b8">${STATE.seccion.label}</div>
       </div>
       <div style="display:flex;gap:6px">
         <button onclick='editarEst(${JSON.stringify(e).replace(/'/g,"&#39;")})' style="background:#eff6ff;color:#3b82f6;border:none;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif">Editar</button>
@@ -344,76 +303,171 @@ function vistaCarga(){
       </div>
     </div>
     <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      ${["1°","2°","3°"].includes(e.grado)?`<span style="font-size:11px;color:#7c3aed;font-weight:700">✍️ ${e[`escritura_${STATE.corte}`]?badgeNivel(e[`escritura_${STATE.corte}`]):""}</span>`:""}
-      ${["1°","2°"].includes(e.grado)?`<span style="font-size:11px;color:#db2777;font-weight:700">📖 ${e[`lectura12_${STATE.corte}`]?badgeNivel(e[`lectura12_${STATE.corte}`]):""}</span>`:""}
-      ${["3°","4°","5°","6°"].includes(e.grado)?`<span style="font-size:11px;color:#0ea5e9;font-weight:700">📖 V:${e[`fluidez_Velocidad_${STATE.corte}`]||"—"} P:${e[`fluidez_Precisión_${STATE.corte}`]||"—"} Pr:${e[`fluidez_Prosodia_${STATE.corte}`]||"—"}</span>`:""}
+      ${["1°","2°","3°"].includes(STATE.seccion.grado)?`${e[`escritura_${STATE.corte}`]?`<span style="font-size:11px;color:#7c3aed;font-weight:700">✍️</span>${badgeNivel(e[`escritura_${STATE.corte}`])}`:""}`:""} 
+      ${["1°","2°"].includes(STATE.seccion.grado)?`${e[`lectura12_${STATE.corte}`]?`<span style="font-size:11px;color:#db2877;font-weight:700">📖</span>${badgeNivel(e[`lectura12_${STATE.corte}`])}`:""}`:""} 
     </div>
   </div>`).join("")}`;
 }
 
-function vistaTablaGrado(){
-  const g=STATE.tablaGrado;
-  const al=(STATE.allData[STATE.escuela.id]||[]).filter(e=>e.grado===g).sort((a,b)=>a.apellido.localeCompare(b.apellido));
+function vistaTabla(){
+  const g=STATE.seccion.grado;
+  const al=(STATE.allData[STATE.seccion.id]||[]).sort((a,b)=>a.apellido.localeCompare(b.apellido));
   const iL=INDS.lengua[g]||[],iM=INDS.matematica[g]||[];
-  return`<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
-    ${GRADOS.map(gr=>`<button onclick="setState({tablaGrado:'${gr}'})" style="padding:6px 16px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:13px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${g===gr?"#1e293b":"#e2e8f0"};background:${g===gr?"#1e293b":"#fff"};color:${g===gr?"#fff":"#475569"}">${gr}</button>`).join("")}
-  </div>
-  ${selectorCorte()}
-  <div style="margin-top:12px">
-  ${al.length===0?`<div style="text-align:center;padding:40px;color:#94a3b8">Sin datos para ${g}</div>`:`
-  <div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0;font-size:11px">
-    <thead>
-      <tr>
-        <th style="background:#1e293b" rowspan="2">Alumno/a</th>
-        ${["1°","2°","3°"].includes(g)?`<th style="background:#7c3aed;text-align:center">✍️ Nivel Escritura</th>`:""}
-        ${["1°","2°"].includes(g)?`<th style="background:#db2777;text-align:center">📖 Nivel Lectura</th>`:""}
-        ${["3°","4°","5°","6°"].includes(g)?`<th style="background:#0ea5e9;text-align:center" colspan="3">📖 Fluidez Lectora</th>`:""}
-        <th style="background:#4338ca;text-align:center" colspan="${iL.length}">📚 Lengua</th>
-        <th style="background:#0369a1;text-align:center" colspan="${iM.length}">🔢 Matemática</th>
-      </tr>
-      <tr style="background:#334155">
-        ${["1°","2°","3°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
-        ${["1°","2°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
-        ${["3°","4°","5°","6°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Velocidad</th><th style="padding:8px 10px;color:#fff;font-size:10px">Precisión</th><th style="padding:8px 10px;color:#fff;font-size:10px">Prosodia</th>`:""}
-        ${[...iL,...iM].map(i=>`<th style="padding:8px 10px;color:#fff;font-weight:700;font-size:10px;max-width:90px;white-space:normal;line-height:1.3;text-align:left">${i}</th>`).join("")}
-      </tr>
-    </thead>
-    <tbody>
-      ${al.map((e,idx)=>`<tr style="background:${idx%2===0?"#f8fafc":"#fff"}">
-        <td style="font-weight:700;white-space:nowrap">${e.apellido}, ${e.nombre}</td>
-        ${["1°","2°","3°"].includes(g)?`<td style="text-align:center">${badgeNivel(e[`escritura_${STATE.corte}`])}</td>`:""}
-        ${["1°","2°"].includes(g)?`<td style="text-align:center">${badgeNivel(e[`lectura12_${STATE.corte}`])}</td>`:""}
-        ${["3°","4°","5°","6°"].includes(g)?`<td style="text-align:center">${badge(e[`fluidez_Velocidad_${STATE.corte}`])}</td><td style="text-align:center">${badge(e[`fluidez_Precisión_${STATE.corte}`])}</td><td style="text-align:center">${badge(e[`fluidez_Prosodia_${STATE.corte}`])}</td>`:""}
-        ${iL.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`lengua_${g}_${ind}`])}</td>`).join("")}
-        ${iM.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`matematica_${g}_${ind}`])}</td>`).join("")}
-      </tr>`).join("")}
-    </tbody>
-  </table></div>`}
+  return`${selectorCorte()}
+  <div style="margin-top:12px;overflow-x:auto">
+    ${al.length===0?`<div style="text-align:center;padding:40px;color:#94a3b8">Sin datos cargados</div>`:`
+    <table style="width:100%;border-collapse:separate;border-spacing:0;font-size:11px">
+      <thead>
+        <tr>
+          <th style="background:#1e293b" rowspan="2">Alumno/a</th>
+          ${["1°","2°","3°"].includes(g)?`<th style="background:#7c3aed;text-align:center">✍️ Escritura</th>`:""}
+          ${["1°","2°"].includes(g)?`<th style="background:#db2877;text-align:center">📖 Lectura</th>`:""}
+          ${["3°","4°","5°","6°"].includes(g)?`<th style="background:#0ea5e9;text-align:center" colspan="3">📖 Fluidez</th>`:""}
+          <th style="background:#4338ca;text-align:center" colspan="${iL.length}">📚 Lengua</th>
+          <th style="background:#0369a1;text-align:center" colspan="${iM.length}">🔢 Matemática</th>
+        </tr>
+        <tr style="background:#334155">
+          ${["1°","2°","3°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
+          ${["1°","2°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
+          ${["3°","4°","5°","6°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Velocidad</th><th style="padding:8px 10px;color:#fff;font-size:10px">Precisión</th><th style="padding:8px 10px;color:#fff;font-size:10px">Prosodia</th>`:""}
+          ${[...iL,...iM].map(i=>`<th style="padding:8px 10px;color:#fff;font-size:10px;max-width:90px;white-space:normal;line-height:1.3;text-align:left">${i}</th>`).join("")}
+        </tr>
+      </thead>
+      <tbody>
+        ${al.map((e,idx)=>`<tr style="background:${idx%2===0?"#f8fafc":"#fff"}">
+          <td style="font-weight:700;white-space:nowrap">${e.apellido}, ${e.nombre}</td>
+          ${["1°","2°","3°"].includes(g)?`<td style="text-align:center">${badgeNivel(e[`escritura_${STATE.corte}`])}</td>`:""}
+          ${["1°","2°"].includes(g)?`<td style="text-align:center">${badgeNivel(e[`lectura12_${STATE.corte}`])}</td>`:""}
+          ${["3°","4°","5°","6°"].includes(g)?`<td style="text-align:center">${badge(e[`fluidez_Velocidad_${STATE.corte}`])}</td><td style="text-align:center">${badge(e[`fluidez_Precisión_${STATE.corte}`])}</td><td style="text-align:center">${badge(e[`fluidez_Prosodia_${STATE.corte}`])}</td>`:""}
+          ${iL.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`lengua_${g}_${ind}`])}</td>`).join("")}
+          ${iM.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`matematica_${g}_${ind}`])}</td>`).join("")}
+        </tr>`).join("")}
+      </tbody>
+    </table>`}
   </div>`;
 }
 
-function vistaGraficos(){
-  const ests=STATE.allData[STATE.escuela.id]||[];
+function vistaGraficosSeccion(){
+  const ests=STATE.allData[STATE.seccion.id]||[];
   return`<div>
-    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-      ${GRADOS.map(gr=>`<button onclick="setState({tablaGrado:'${gr}'})" style="padding:6px 16px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:13px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${STATE.tablaGrado===gr?"#1e293b":"#e2e8f0"};background:${STATE.tablaGrado===gr?"#1e293b":"#fff"};color:${STATE.tablaGrado===gr?"#fff":"#475569"}">${gr}</button>`).join("")}
+    ${selectorCorte()}
+    <div style="font-weight:700;font-size:15px;color:#1e293b;margin:12px 0 4px">${STATE.seccion.label} · Corte ${STATE.corte}</div>
+    <div style="font-size:12px;color:#94a3b8;margin-bottom:12px">${ests.length} estudiantes</div>
+    ${graficoNiveles(ests,STATE.seccion.grado,STATE.corte)}
+  </div>`;
+}
+
+// ── VISTA DIRECTIVO ──────────────────────────────────
+function vistaDirectivo(){
+  const g=STATE.dirGrado, s=STATE.dirSeccion;
+  const secId=`${g}${s}`;
+  const indsL=INDS.lengua[g]||[], indsM=INDS.matematica[g]||[];
+
+  // Stats para una sección
+  const statsArea=(id,area)=>{
+    const ests=(STATE.allData[id]||[]);
+    const inds=area==="lengua"?INDS.lengua[g]||[]:INDS.matematica[g]||[];
+    return inds.map(ind=>{
+      const k=`${area}_${g}_${ind}`;
+      const vs=ests.map(e=>e.indicadores?.[k]).filter(Boolean);
+      return{ind,c:vs.filter(v=>v==="Consolidado").length,p:vs.filter(v=>v==="En proceso").length,i:vs.filter(v=>v==="Incipiente").length,total:vs.length};
+    });
+  };
+
+  const ests=STATE.allData[secId]||[];
+
+  return`${header("Vista Directivo · José María Paz","Trayectorias Cuidadas · Aprendizajes Significativos")}
+  <div style="padding:24px;max-width:1400px;margin:0 auto">
+    ${leyenda()}
+
+    <!-- Selector grado + sección -->
+    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:flex-end">
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:4px;text-transform:uppercase">Grado</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${GRADOS.map(gr=>`<button onclick="setState({dirGrado:'${gr}'})" style="padding:7px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${g===gr?"#1e293b":"#e2e8f0"};background:${g===gr?"#1e293b":"#fff"};color:${g===gr?"#fff":"#475569"}">${gr}</button>`).join("")}
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:4px;text-transform:uppercase">Sección</div>
+        <div style="display:flex;gap:6px">
+          ${SECCIONES.map(sc=>`<button onclick="setState({dirSeccion:'${sc}'})" style="padding:7px 16px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${s===sc?"#059669":"#e2e8f0"};background:${s===sc?"#059669":"#fff"};color:${s===sc?"#fff":"#475569"}">Sección ${sc}</button>`).join("")}
+        </div>
+      </div>
       ${selectorCorte()}
     </div>
-    <div style="font-weight:700;font-size:16px;color:#1e293b;margin-bottom:4px">${STATE.tablaGrado} grado · Corte ${STATE.corte}</div>
-    <div style="font-size:12px;color:#94a3b8;margin-bottom:16px">${ests.filter(e=>e.grado===STATE.tablaGrado).length} estudiantes</div>
-    ${graficoNiveles(ests,STATE.tablaGrado,STATE.corte)}
+
+    <!-- Resumen sección seleccionada -->
+    <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;color:#1e293b">${g} Sección ${s} · ${ests.length} estudiantes</div>
+      </div>
+      ${STATE.loading?loader():ests.length===0?`<div style="text-align:center;padding:32px;color:#94a3b8;border:2px dashed #e2e8f0;border-radius:12px">Sin datos cargados para esta sección</div>`:`
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0;font-size:11px">
+        <thead>
+          <tr>
+            <th style="background:#1e293b" rowspan="2">Alumno/a</th>
+            ${["1°","2°","3°"].includes(g)?`<th style="background:#7c3aed;text-align:center">✍️ Escritura</th>`:""}
+            ${["1°","2°"].includes(g)?`<th style="background:#db2877;text-align:center">📖 Lectura</th>`:""}
+            ${["3°","4°","5°","6°"].includes(g)?`<th style="background:#0ea5e9;text-align:center" colspan="3">📖 Fluidez</th>`:""}
+            <th style="background:#4338ca;text-align:center" colspan="${indsL.length}">📚 Lengua</th>
+            <th style="background:#0369a1;text-align:center" colspan="${indsM.length}">🔢 Matemática</th>
+          </tr>
+          <tr style="background:#334155">
+            ${["1°","2°","3°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
+            ${["1°","2°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
+            ${["3°","4°","5°","6°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Velocidad</th><th style="padding:8px 10px;color:#fff;font-size:10px">Precisión</th><th style="padding:8px 10px;color:#fff;font-size:10px">Prosodia</th>`:""}
+            ${[...indsL,...indsM].map(i=>`<th style="padding:8px 10px;color:#fff;font-size:10px;max-width:90px;white-space:normal;line-height:1.3;text-align:left">${i}</th>`).join("")}
+          </tr>
+        </thead>
+        <tbody>
+          ${ests.sort((a,b)=>a.apellido.localeCompare(b.apellido)).map((e,idx)=>`<tr style="background:${idx%2===0?"#f8fafc":"#fff"}">
+            <td style="font-weight:700;white-space:nowrap">${e.apellido}, ${e.nombre}</td>
+            ${["1°","2°","3°"].includes(g)?`<td style="text-align:center">${badgeNivel(e[`escritura_${STATE.corte}`])}</td>`:""}
+            ${["1°","2°"].includes(g)?`<td style="text-align:center">${badgeNivel(e[`lectura12_${STATE.corte}`])}</td>`:""}
+            ${["3°","4°","5°","6°"].includes(g)?`<td style="text-align:center">${badge(e[`fluidez_Velocidad_${STATE.corte}`])}</td><td style="text-align:center">${badge(e[`fluidez_Precisión_${STATE.corte}`])}</td><td style="text-align:center">${badge(e[`fluidez_Prosodia_${STATE.corte}`])}</td>`:""}
+            ${indsL.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`lengua_${g}_${ind}`])}</td>`).join("")}
+            ${indsM.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`matematica_${g}_${ind}`])}</td>`).join("")}
+          </tr>`).join("")}
+        </tbody>
+      </table></div>
+      <div style="margin-top:20px">${graficoNiveles(ests,g,STATE.corte)}</div>`}
+    </div>
+
+    <!-- Resumen general todas las secciones -->
+    <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:#1e293b;margin-bottom:16px">📊 Resumen · ${g} Grado · Todas las secciones</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+        ${SECCIONES.map(sc=>{
+          const sid=`${g}${sc}`;
+          const ests=STATE.allData[sid]||[];
+          const total=ests.length;
+          return`<div style="background:#f8fafc;border-radius:12px;padding:16px;border:1.5px solid #e2e8f0;cursor:pointer" onclick="setState({dirSeccion:'${sc}'})">
+            <div style="font-weight:700;font-size:15px;color:#1e293b;margin-bottom:4px">${g} Sección ${sc}</div>
+            <div style="font-size:22px;font-weight:900;color:${total>0?"#0369a1":"#cbd5e1"};margin-bottom:10px">${total} <span style="font-size:12px;font-weight:400;color:#94a3b8">estudiantes</span></div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:10px;font-weight:700;color:#4338ca;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">📚 Lengua</div>
+              ${semaforo(ests,g,"lengua")}
+              <div style="font-size:10px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.5px;margin-top:6px;margin-bottom:2px">🔢 Matemática</div>
+              ${semaforo(ests,g,"matematica")}
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>
   </div>`;
 }
 
-// ── MODAL ESTUDIANTE ────────────────────────────────────
+// ── MODAL ESTUDIANTE ─────────────────────────────────
 function modalEstudiante(){
-  const m=STATE.modal,e=m.est||{apellido:"",nombre:"",grado:STATE.filtroGrado||"",seccion:"",indicadores:{},observaciones:""};
-  const g=e.grado;
+  const m=STATE.modal;
+  const e=m.est||{apellido:"",nombre:"",indicadores:{},observaciones:""};
+  const g=STATE.seccion.grado;
 
   const bloqueEscritura=()=>{
-    if(!["1°","2°","3°"].includes(g)) return "";
+    if(!["1°","2°","3°"].includes(g))return"";
     return`<div style="margin-bottom:18px">
-      <div style="font-weight:700;color:#7c3aed;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #7c3aed">✍️ Nivel de Escritura (Ana María Kauffman)</div>
+      <div style="font-weight:700;color:#7c3aed;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #7c3aed">✍️ Nivel de Escritura (Kauffman)</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
         ${CORTES.map(c=>{const v=e[`escritura_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
           <div style="font-size:11px;color:#7c3aed;margin-bottom:5px;font-weight:700">📅 ${c}</div>
@@ -426,14 +480,14 @@ function modalEstudiante(){
     </div>`;
   };
 
-  const bloqueLectura12=()=>{
-    if(!["1°","2°"].includes(g)) return "";
+  const bloqueLectura=()=>{
+    if(!["1°","2°"].includes(g))return"";
     return`<div style="margin-bottom:18px">
-      <div style="font-weight:700;color:#db2777;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #db2777">📖 Nivel de Lectura</div>
+      <div style="font-weight:700;color:#db2877;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #db2877">📖 Nivel de Lectura</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
         ${CORTES.map(c=>{const v=e[`lectura12_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
-          <div style="font-size:11px;color:#db2777;margin-bottom:5px;font-weight:700">📅 ${c}</div>
-          <select data-key="lectura12_${c}" onchange="updateExtra('lectura12_${c}',this.value)" style="font-size:12px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #db277744;background:#fdf2f8;color:#db2777;width:auto">
+          <div style="font-size:11px;color:#db2877;margin-bottom:5px;font-weight:700">📅 ${c}</div>
+          <select data-key="lectura12_${c}" onchange="updateExtra('lectura12_${c}',this.value)" style="font-size:12px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #db287744;background:#fdf2f8;color:#db2877;width:auto">
             <option value="">— nivel —</option>
             ${NIV_LECTURA_12.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
           </select>
@@ -443,7 +497,7 @@ function modalEstudiante(){
   };
 
   const bloqueFluidez=()=>{
-    if(!["3°","4°","5°","6°"].includes(g)) return "";
+    if(!["3°","4°","5°","6°"].includes(g))return"";
     return`<div style="margin-bottom:18px">
       <div style="font-weight:700;color:#0ea5e9;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #0ea5e9">📖 Fluidez Lectora</div>
       ${["Velocidad","Precisión","Prosodia"].map(dim=>`
@@ -485,31 +539,19 @@ function modalEstudiante(){
   return`<div class="modal-overlay" onclick="if(event.target===this)cerrarModal()">
     <div class="modal-box">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <h3 style="font-family:'Playfair Display',serif;margin:0;font-size:20px;color:#1e293b">${m.mode==="new"?"Nuevo":"Editar"} estudiante</h3>
+        <h3 style="font-family:'Playfair Display',serif;margin:0;font-size:20px;color:#1e293b">${m.mode==="new"?"Nuevo":"Editar"} estudiante · ${STATE.seccion.label}</h3>
         <button onclick="cerrarModal()" style="background:none;border:none;font-size:26px;cursor:pointer;color:#94a3b8;line-height:1">×</button>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 100px 80px;gap:10px;margin-bottom:20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
         <div><label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Apellido</label>
           <input id="m-apellido" value="${e.apellido}" placeholder="Apellido"/></div>
         <div><label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Nombre</label>
           <input id="m-nombre" value="${e.nombre}" placeholder="Nombre"/></div>
-        <div><label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Grado</label>
-          <select id="m-grado" onchange="cambiarGrado(this.value)">
-            <option value="">—</option>${GRADOS.map(gr=>`<option ${e.grado===gr?"selected":""}>${gr}</option>`).join("")}
-          </select></div>
-        <div><label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Sección</label>
-          <select id="m-seccion" style="width:auto">
-            <option value="">—</option>${["A","B","C","D","E"].map(s=>`<option ${(e.seccion||"")===s?"selected":""}>${s}</option>`).join("")}
-          </select></div>
       </div>
-      <div id="bloques-extra">
-        ${g?bloqueEscritura()+bloqueLectura12()+bloqueFluidez():""}
-      </div>
-      <div id="bloques-inds">
-        ${g?bloqueInds("lengua","#6366f1","📚")+bloqueInds("matematica","#0ea5e9","🔢"):""}
-      </div>
+      ${bloqueEscritura()}${bloqueLectura()}${bloqueFluidez()}
+      ${bloqueInds("lengua","#6366f1","📚")}${bloqueInds("matematica","#0ea5e9","🔢")}
       <div style="margin-top:14px">
-        <label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Observaciones / Trayectoria</label>
+        <label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Observaciones</label>
         <textarea id="m-obs" rows="2" placeholder="Notas sobre la trayectoria...">${e.observaciones||""}</textarea>
       </div>
       <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">
@@ -532,121 +574,62 @@ function modalConfirmarBorrar(){
   </div></div>`;
 }
 
-// ── VISTA SUPERVISORA ───────────────────────────────────
-function vistaSupervisor(){
-  const area=STATE.supArea,g=STATE.supGrado;
-  const inds=(area==="lengua"?INDS.lengua:INDS.matematica)[g]||[];
-  const stats=id=>{
-    const ests=(STATE.allData[id]||[]).filter(e=>e.grado===g);
-    return{total:ests.length,porInd:inds.map(ind=>{
-      const k=`${area}_${g}_${ind}`,vs=ests.map(e=>e.indicadores?.[k]).filter(Boolean);
-      return{ind,c:vs.filter(v=>v==="Consolidado").length,p:vs.filter(v=>v==="En proceso").length,i:vs.filter(v=>v==="Incipiente").length,total:vs.length};
-    })};
-  };
-  const det=STATE.supSel?(()=>{
-    const ests=(STATE.allData[STATE.supSel.id]||[]).filter(e=>e.grado===g).sort((a,b)=>a.apellido.localeCompare(b.apellido));
-    return`<div style="background:#f0f9ff;border:2px solid #bae6fd;border-radius:14px;padding:20px;margin-bottom:16px">
-      <h4 style="font-family:'Playfair Display',serif;margin:0 0 14px;color:#0369a1;font-size:17px">${STATE.supSel.nombre} · ${area==="lengua"?"📚 Lengua":"🔢 Matemática"} · ${g}</h4>
-      ${ests.length===0?`<p style="color:#94a3b8">Sin datos.</p>`:`<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0;font-size:11px">
-        <thead><tr style="background:#0369a1"><th>Alumno/a</th>${inds.map(i=>`<th style="padding:8px 10px;color:#fff;font-size:10px;white-space:normal;line-height:1.3;text-align:left">${i}</th>`).join("")}</tr></thead>
-        <tbody>${ests.map((e,idx)=>`<tr style="background:${idx%2===0?"#fff":"#f0f9ff"}"><td style="font-weight:700;white-space:nowrap">${e.apellido}, ${e.nombre}</td>${inds.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`${area}_${g}_${ind}`])}</td>`).join("")}</tr>`).join("")}</tbody>
-      </table></div>`}
-    </div>`;
-  })():"";
-
-  return`${header("Panel Inspectora · Trayectorias Cuidadas 5310 Oeste","Instituciones Departamento Santa María")}
-  <div style="padding:24px;max-width:1400px;margin:0 auto">
-    ${leyenda()}
-    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:flex-end">
-      <div><div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Área</div>
-        <div style="display:flex;gap:6px">
-          ${["lengua","matematica"].map(a=>`<button onclick="setState({supArea:'${a}',supSel:null})" style="padding:7px 16px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${area===a?(a==="lengua"?"#6366f1":"#0ea5e9"):"#e2e8f0"};background:${area===a?(a==="lengua"?"#6366f1":"#0ea5e9"):"#fff"};color:${area===a?"#fff":"#475569"}">${a==="lengua"?"📚 Lengua":"🔢 Matemática"}</button>`).join("")}
-        </div>
-      </div>
-      <div><div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Grado</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${GRADOS.map(gr=>`<button onclick="setState({supGrado:'${gr}',supSel:null})" style="padding:7px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${g===gr?"#1e293b":"#e2e8f0"};background:${g===gr?"#1e293b":"#fff"};color:${g===gr?"#fff":"#475569"}">${gr}</button>`).join("")}
-        </div>
-      </div>
-    </div>
-    <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001">
-      ${STATE.loading?loader("Cargando todas las escuelas..."):det+`<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0;font-size:12px">
-        <thead><tr style="background:#1e293b"><th>Institución</th><th style="text-align:center">Alumnos</th><th style="text-align:center">📚 Lengua</th><th style="text-align:center">🔢 Matemática</th>${inds.map(i=>`<th style="padding:8px 10px;color:#fff;font-size:10px;max-width:110px;white-space:normal;line-height:1.3;text-align:left">${i}</th>`).join("")}</tr></thead>
-        <tbody>${ESCUELAS.map((esc,idx)=>{const{total,porInd}=stats(esc.id);const ac=STATE.supSel?.id===esc.id;
-          return`<tr style="background:${ac?"#eff6ff":idx%2===0?"#f8fafc":"#fff"};cursor:pointer" onclick="toggleSupSel('${esc.id}')">
-            <td style="font-weight:700;color:#1e293b"><span style="margin-right:6px;color:#94a3b8;font-size:10px">${ac?"▼":"▶"}</span>${esc.nombre}</td>
-            <td style="text-align:center;font-weight:700">${total>0?total:`<span style="color:#cbd5e1">—</span>`}</td>
-            <td style="text-align:center">${semaforoEscuela(esc.id,"lengua")}</td>
-            <td style="text-align:center">${semaforoEscuela(esc.id,"matematica")}</td>
-            ${porInd.map(({c,p,i:iv,total:t})=>`<td>${barra(c,p,iv,t)}</td>`).join("")}
-          </tr>`;}).join("")}
-        </tbody>
-      </table></div>`}
-    </div>
-  </div>`;
-}
-
-// ── IMPRIMIR FICHAS ─────────────────────────────────────
+// ── IMPRIMIR ─────────────────────────────────────────
 function imprimirFicha(){
-  const esc=STATE.escuela;
-  const ests=(STATE.allData[esc.id]||[]).sort((a,b)=>a.apellido.localeCompare(b.apellido));
+  const sec=STATE.seccion;
+  const ests=(STATE.allData[sec.id]||[]).sort((a,b)=>a.apellido.localeCompare(b.apellido));
   if(!ests.length){alert("No hay estudiantes cargados.");return;}
+  const g=sec.grado;
+  const iL=INDS.lengua[g]||[],iM=INDS.matematica[g]||[];
+  const cL=v=>v==="Consolidado"?"#16a34a":v==="En proceso"?"#d97706":v==="Incipiente"?"#dc2626":"#94a3b8";
+  const cN=v=>{const m={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasilábica":"#d97706","Alfabética":"#16a34a"};return m[v]||"#475569";};
   const win=window.open("","_blank");
-  const filas=ests.map(e=>{
-    const g=e.grado;
-    const iL=INDS.lengua[g]||[],iM=INDS.matematica[g]||[];
-    const colorLogro=v=>v==="Consolidado"?"#16a34a":v==="En proceso"?"#d97706":v==="Incipiente"?"#dc2626":"#94a3b8";
-    const colorNivel=v=>{const m={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasilábica":"#d97706","Alfabética":"#16a34a","Alfabética inicial":"#15803d"};return m[v]||"#475569";};
-    return`<div style="border:1.5px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:14px;page-break-inside:avoid;font-family:'Source Sans 3',sans-serif">
-      <div style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom:1px solid #e2e8f0;padding-bottom:8px">
-        <div><b style="font-size:15px">${e.apellido}, ${e.nombre}</b><br/><span style="font-size:12px;color:#64748b">${e.grado}${e.seccion?" · Sección "+e.seccion:""} · ${esc.nombre}</span></div>
-        <div style="font-size:11px;color:#94a3b8;text-align:right">Trayectorias Cuidadas · Zona 5310 Oeste<br/>Supervisora: Gabriela de los Ángeles Navarrete</div>
-      </div>
-      ${["1°","2°","3°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#7c3aed">✍️ NIVEL DE ESCRITURA</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${colorNivel(e["escritura_"+c])}">${e["escritura_"+c]||"—"}</span></span>`).join("")}</div>`:""}
-      ${["1°","2°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#db2877">📖 NIVEL DE LECTURA</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${colorNivel(e["lectura12_"+c])}">${e["lectura12_"+c]||"—"}</span></span>`).join("")}</div>`:""}
-      ${["3°","4°","5°","6°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#0ea5e9">📖 FLUIDEZ LECTORA</b><br/>${["Velocidad","Precisión","Prosodia"].map(dim=>`<div style="font-size:11px"><b>${dim}:</b> ${CORTES.map(c=>`<span style="margin-right:10px"><b>${c}:</b> <span style="color:${colorLogro(e["fluidez_"+dim+"_"+c])}">${e["fluidez_"+dim+"_"+c]||"—"}</span></span>`).join("")}</div>`).join("")}</div>`:""}
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-        <div><b style="font-size:11px;color:#4338ca">📚 LENGUA</b>${iL.map(ind=>`<div style="font-size:10px;color:#475569;margin-top:3px">${ind}: <b style="color:${colorLogro(e.indicadores?.[`lengua_${g}_${ind}`])}">${e.indicadores?.[`lengua_${g}_${ind}`]||"—"}</b></div>`).join("")}</div>
-        <div><b style="font-size:11px;color:#0369a1">🔢 MATEMÁTICA</b>${iM.map(ind=>`<div style="font-size:10px;color:#475569;margin-top:3px">${ind}: <b style="color:${colorLogro(e.indicadores?.[`matematica_${g}_${ind}`])}">${e.indicadores?.[`matematica_${g}_${ind}`]||"—"}</b></div>`).join("")}</div>
-      </div>
-      ${e.observaciones?`<div style="margin-top:8px;font-size:11px;color:#64748b;font-style:italic;border-top:1px solid #e2e8f0;padding-top:6px">📝 ${e.observaciones}</div>`:""}
-    </div>`;
-  }).join("");
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Fichas · ${esc.nombre}</title>
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Fichas · ${sec.label}</title>
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>body{font-family:'Source Sans 3',sans-serif;padding:20px;max-width:800px;margin:0 auto}@media print{@page{margin:1cm}}</style>
   </head><body>
   <div style="text-align:center;margin-bottom:20px;border-bottom:2px solid #1e293b;padding-bottom:14px">
-    <div style="font-size:10px;color:#94a3b8;letter-spacing:2px;text-transform:uppercase">Sede de Inspección 5310 · Zona Oeste · Instituciones Departamento Santa María</div>
-    <div style="font-size:22px;font-weight:900;color:#1e293b">Trayectorias Cuidadas</div>
-    <div style="font-size:14px;color:#475569">${esc.nombre} · Supervisora: Gabriela de los Ángeles Navarrete</div>
-    <div style="font-size:12px;color:#94a3b8">Cortes evaluativos: Mayo · Agosto · Diciembre · Año ${new Date().getFullYear()}</div>
+    <div style="font-size:10px;color:#94a3b8;letter-spacing:2px;text-transform:uppercase">Escuela José María Paz · ${sec.label}</div>
+    <div style="font-size:22px;font-weight:900;color:#1e293b">Trayectorias Cuidadas · Aprendizajes Significativos</div>
+    <div style="font-size:13px;color:#475569">Directora: María de Fátima Díaz · Docente Facilitadora M+M: Gabriela Pafume</div>
+    <div style="font-size:12px;color:#94a3b8">Cortes: Mayo · Agosto · Diciembre · Año ${new Date().getFullYear()}</div>
   </div>
-  ${filas}
+  ${ests.map(e=>`<div style="border:1.5px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:14px;page-break-inside:avoid">
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom:1px solid #e2e8f0;padding-bottom:8px">
+      <div><b style="font-size:15px">${e.apellido}, ${e.nombre}</b><br/><span style="font-size:12px;color:#64748b">${sec.label} · José María Paz</span></div>
+    </div>
+    ${["1°","2°","3°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#7c3aed">✍️ NIVEL DE ESCRITURA</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${cN(e["escritura_"+c])}">${e["escritura_"+c]||"—"}</span></span>`).join("")}</div>`:""}
+    ${["1°","2°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#db2877">📖 NIVEL DE LECTURA</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${cN(e["lectura12_"+c])}">${e["lectura12_"+c]||"—"}</span></span>`).join("")}</div>`:""}
+    ${["3°","4°","5°","6°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#0ea5e9">📖 FLUIDEZ LECTORA</b><br/>${["Velocidad","Precisión","Prosodia"].map(dim=>`<div style="font-size:11px"><b>${dim}:</b> ${CORTES.map(c=>`<span style="margin-right:10px"><b>${c}:</b> <span style="color:${cL(e["fluidez_"+dim+"_"+c])}">${e["fluidez_"+dim+"_"+c]||"—"}</span></span>`).join("")}</div>`).join("")}</div>`:""}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      <div><b style="font-size:11px;color:#4338ca">📚 LENGUA</b>${iL.map(ind=>`<div style="font-size:10px;color:#475569;margin-top:3px">${ind}: <b style="color:${cL(e.indicadores?.["lengua_"+g+"_"+ind])}">${e.indicadores?.["lengua_"+g+"_"+ind]||"—"}</b></div>`).join("")}</div>
+      <div><b style="font-size:11px;color:#0369a1">🔢 MATEMÁTICA</b>${iM.map(ind=>`<div style="font-size:10px;color:#475569;margin-top:3px">${ind}: <b style="color:${cL(e.indicadores?.["matematica_"+g+"_"+ind])}">${e.indicadores?.["matematica_"+g+"_"+ind]||"—"}</b></div>`).join("")}</div>
+    </div>
+    ${e.observaciones?`<div style="margin-top:8px;font-size:11px;color:#64748b;font-style:italic;border-top:1px solid #e2e8f0;padding-top:6px">📝 ${e.observaciones}</div>`:""}
+  </div>`).join("")}
   </body></html>`);
   win.document.close();
   setTimeout(()=>win.print(),600);
 }
 
-// ── ACCIONES ────────────────────────────────────────────
-async function selEscuela(id){
-  const esc=ESCUELAS.find(e=>e.id===id);
-  setState({modo:"escuela",escuela:esc,tab:"carga",loading:true,filtroGrado:"",busqEst:""});
-  const data=await dbGet(`esc-${id}`);
+// ── ACCIONES ─────────────────────────────────────────
+async function selSeccion(id){
+  const sec=SECCIONES_LIST.find(s=>s.id===id);
+  setState({modo:"seccion",seccion:sec,tab:"carga",loading:true,busqEst:""});
+  const data=await dbGet(`sec-${id}`);
   setState({allData:{...STATE.allData,[id]:data?JSON.parse(data):[]},loading:false});
 }
-async function irSupervisor(){
-  setState({modo:"supervisor",loading:true,supSel:null});
-  const entries=await Promise.all(ESCUELAS.map(e=>dbGet(`esc-${e.id}`).then(d=>[e.id,d?JSON.parse(d):[]])));
+async function irDirectivo(){
+  setState({modo:"directivo",loading:true});
+  const entries=await Promise.all(SECCIONES_LIST.map(s=>dbGet(`sec-${s.id}`).then(d=>[s.id,d?JSON.parse(d):[]])));
   const o={};entries.forEach(([id,d])=>o[id]=d);
   setState({allData:o,loading:false});
 }
-function irInicio(){setState({modo:"inicio",escuela:null,busq:"",supSel:null});}
+function irInicio(){setState({modo:"inicio",seccion:null,busq:""});}
 function abrirModal(){setState({modal:{mode:"new",est:null}});}
 function editarEst(est){setState({modal:{mode:"edit",est:JSON.parse(JSON.stringify(est))}});}
 function cerrarModal(){setState({modal:null});}
 function confirmarBorrar(est){setState({del:est});}
-function cambiarGrado(grado){STATE.modal={...STATE.modal,est:{...(STATE.modal.est||{}),grado,indicadores:{}}};render();}
 function updateInd(key,val){if(STATE.modal)STATE.modal.est.indicadores={...(STATE.modal.est.indicadores||{}),[key]:val};}
 function updateExtra(key,val){if(STATE.modal)STATE.modal.est={...STATE.modal.est,[key]:val};}
 
@@ -654,32 +637,29 @@ async function guardarEstudiante(){
   const m=STATE.modal;
   const apellido=document.getElementById("m-apellido")?.value.trim()||"";
   const nombre=document.getElementById("m-nombre")?.value.trim()||"";
-  const grado=document.getElementById("m-grado")?.value||"";
-  const seccion=document.getElementById("m-seccion")?.value||"";
-  const observaciones=document.getElementById("m-obs")?.value.trim()||"";
   if(!apellido||!nombre){alert("Completá nombre y apellido.");return;}
   const indicadores={...(m.est?.indicadores||{})};
   document.querySelectorAll("[data-ind]").forEach(s=>{if(s.value)indicadores[s.dataset.ind]=s.value;});
   const extras={};
   document.querySelectorAll("[data-key]").forEach(s=>{if(s.value)extras[s.dataset.key]=s.value;});
-  const est={...(m.est||{}),...extras,apellido,nombre,grado,seccion,observaciones,indicadores,id:m.est?.id||Date.now()};
-  const escId=STATE.escuela.id,prev=STATE.allData[escId]||[];
+  const observaciones=document.getElementById("m-obs")?.value.trim()||"";
+  const est={...(m.est||{}),...extras,apellido,nombre,grado:STATE.seccion.grado,seccion:STATE.seccion.seccion,observaciones,indicadores,id:m.est?.id||Date.now()};
+  const secId=STATE.seccion.id,prev=STATE.allData[secId]||[];
   const upd=m.mode==="new"?[...prev,est]:prev.map(e=>e.id===est.id?est:e);
-  setState({modal:null,allData:{...STATE.allData,[escId]:upd}});
-  await dbSet(`esc-${escId}`,JSON.stringify(upd));
+  setState({modal:null,allData:{...STATE.allData,[secId]:upd}});
+  await dbSet(`sec-${secId}`,JSON.stringify(upd));
 }
 async function borrarEstudiante(){
-  const escId=STATE.escuela.id,upd=(STATE.allData[escId]||[]).filter(e=>e.id!==STATE.del.id);
-  setState({del:null,allData:{...STATE.allData,[escId]:upd}});
-  await dbSet(`esc-${escId}`,JSON.stringify(upd));
+  const secId=STATE.seccion.id,upd=(STATE.allData[secId]||[]).filter(e=>e.id!==STATE.del.id);
+  setState({del:null,allData:{...STATE.allData,[secId]:upd}});
+  await dbSet(`sec-${secId}`,JSON.stringify(upd));
 }
-function toggleSupSel(id){const esc=ESCUELAS.find(e=>e.id===id);setState({supSel:STATE.supSel?.id===id?null:esc});}
 
 function render(){
   const r=document.getElementById("root");
   if(STATE.modo==="inicio")r.innerHTML=vistaInicio();
-  else if(STATE.modo==="escuela")r.innerHTML=vistaEscuela();
-  else if(STATE.modo==="supervisor")r.innerHTML=vistaSupervisor();
+  else if(STATE.modo==="seccion")r.innerHTML=vistaSeccion();
+  else if(STATE.modo==="directivo")r.innerHTML=vistaDirectivo();
 }
 if(window.firebaseReady){render();}
 else{document.addEventListener("firebaseReady",render,{once:true});render();}
