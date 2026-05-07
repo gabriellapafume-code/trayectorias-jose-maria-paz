@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <!-- TRAYECTORIAS CUIDADAS · Aprendizajes Significativos · José María Paz -->
 <html lang="es">
 <head>
@@ -18,7 +18,7 @@ const firebaseConfig = {
   appId: "1:617808268570:web:7338eb999a3cbdd812b0a3"
 };
 const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const db = getFirestore(app);
 window.dbGet = async (key) => {
   try { const snap = await getDoc(doc(db,"mapeo",key)); return snap.exists()?snap.data().value:null; }
   catch(e){ return null; }
@@ -33,8 +33,8 @@ document.dispatchEvent(new Event("firebaseReady"));
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Source Sans 3',sans-serif;background:#f1f5f9;min-height:100vh}
 input,select,textarea{width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;color:#1e293b;background:#f8fafc;font-family:'Source Sans 3',sans-serif}
-input:focus,select:focus,textarea:focus{outline:2px solid #3b82f6;border-color:#3b82f6}
-.btn-primary{background:#1e293b;color:#fff;border:none;border-radius:10px;padding:10px 24px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Source Sans 3',sans-serif}
+input:focus,select:focus,textarea:focus{outline:2px solid #fb7185;border-color:#fb7185}
+.btn-primary{background:#be185d;color:#fff;border:none;border-radius:10px;padding:10px 24px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Source Sans 3',sans-serif}
 .btn-secondary{background:#f1f5f9;color:#475569;border:none;border-radius:10px;padding:10px 24px;font-weight:700;cursor:pointer;font-size:13px;font-family:'Source Sans 3',sans-serif}
 .btn-tab{padding:8px 20px;border-radius:8px;border:2px solid;font-weight:700;font-size:13px;cursor:pointer;font-family:'Source Sans 3',sans-serif}
 th{padding:8px 10px;color:#fff;font-weight:700;text-align:left;font-size:11px;white-space:nowrap}
@@ -43,33 +43,37 @@ td{padding:7px 10px;border-bottom:1px solid #e2e8f0;vertical-align:middle}
 .badge-c{background:#f0fdf4;color:#16a34a;border-color:#16a34a44}
 .badge-p{background:#fffbeb;color:#d97706;border-color:#d97706}
 .badge-i{background:#fef2f2;color:#dc2626;border-color:#dc2626}
+.badge-l{background:#f0fdf4;color:#16a34a;border-color:#16a34a44}
+.badge-ep{background:#fffbeb;color:#d97706;border-color:#d97706}
+.badge-ra{background:#fdf4ff;color:#a21caf;border-color:#a21caf44}
 .loader{text-align:center;padding:60px;color:#94a3b8}
-.spinner{display:inline-block;width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#3b82f6;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px}
+.spinner{display:inline-block;width:32px;height:32px;border:3px solid #e2e8f0;border-top-color:#fb7185;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:12px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .modal-overlay{position:fixed;inset:0;background:#000b;z-index:300;display:flex;align-items:center;justify-content:center}
 .modal-box{background:#fff;border-radius:20px;padding:28px;max-width:750px;width:96vw;max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px #0005}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:#f1f5f9}
-::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+::-webkit-scrollbar-thumb{background:#fbcfe8;border-radius:3px}
 @media print{.no-print{display:none!important}body{background:#fff}}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
-// ── SECCIONES POR GRADO ──────────────────────────────
-const GRADOS = ["1°","2°","3°","4°","5°","6°"];
-const SECCIONES = ["A","B","C","D"];
-const CORTES = ["Mayo","Agosto","Diciembre"];
-const LOGRO = ["Consolidado","En proceso","Incipiente"];
-const NIV_ESCRITURA = ["Diferenciada","Silábica","Silábica alfabética","Cuasialfabética","Alfabética"];
-const NIV_LECTURA_12 = ["Diferenciada","Silábica","Alfabética"];
+const GRADOS=["1°","2°","3°","4°","5°","6°"];
+const SECCIONES=["A","B","C","D"];
+const CORTES=["Mayo","Agosto","Diciembre"];
+const LOGRO=["Consolidado","En proceso","Incipiente"];
+const LOGRO_ADAPT=["Logrado","En proceso","Requiere acompañamiento"];
+const NIV_ESCRITURA=["Diferenciada","Silábica","Silábica alfabética","Cuasialfabética","Alfabética"];
+const NIV_LECTURA_12=["Diferenciada","Silábica","Alfabética"];
+const MARCAS_ESPECIALES=["CUD","PPI","MEMO2"];
 
-// Generar lista de secciones: 1°A, 1°B, ... 6°D
-const SECCIONES_LIST = [];
-GRADOS.forEach(g => SECCIONES.forEach(s => SECCIONES_LIST.push({id:`${g}${s}`, grado:g, seccion:s, label:`${g} Sección ${s}`})));
+const SECCIONES_LIST=[];
+GRADOS.forEach(g=>SECCIONES.forEach(s=>SECCIONES_LIST.push({id:`${g}${s}`,grado:g,seccion:s,label:`${g} Sección ${s}`})));
 
-const INDS = {
+// Indicadores generales
+const INDS={
   lengua:{
     "1°":["Escribe su nombre de manera autónoma","Diferencia dibujos, números y letras","Identifica palabras significativas","Formula hipótesis de escritura (cantidad y variedad)","Participa en intercambios orales y escucha relatos"],
     "2°":["Respeta turnos de habla","Recupera información explícita","Coherencia temática en la conversación","Realiza comentarios pertinentes","Lee convencionalmente textos breves","Escribe convencionalmente con intención comunicativa"],
@@ -88,59 +92,38 @@ const INDS = {
   }
 };
 
-// ── SEMÁFORO ─────────────────────────────────────────
-function semaforo(estudiantes, grado, area){
-  const inds = INDS[area][grado]||[];
-  if(!inds.length || !estudiantes.length) return `<span style="color:#cbd5e1;font-size:11px">—</span>`;
-  let c=0,p=0,i=0,total=0;
-  estudiantes.forEach(e=>{
-    inds.forEach(ind=>{
-      const v=e.indicadores?.[`${area}_${grado}_${ind}`];
-      if(v){
-        total++;
-        if(v==="Consolidado")c++;
-        else if(v==="En proceso")p++;
-        else if(v==="Incipiente")i++;
-      }
-    });
-  });
-  if(!total) return `<span style="color:#cbd5e1;font-size:11px">Sin datos</span>`;
-  const pctC=Math.round(c/total*100);
-  const pctP=Math.round(p/total*100);
-  const pctI=Math.round(i/total*100);
-  let color,emoji,label;
-  if(pctC>=50){color="#16a34a";emoji="🟢";label=`Consolidado ${pctC}%`;}
-  else if(pctP>=50){color="#d97706";emoji="🟡";label=`En proceso ${pctP}%`;}
-  else{color="#dc2626";emoji="🔴";label=`Incipiente ${pctI}%`;}
-  return `<div style="display:flex;align-items:center;gap:6px">
-    <span style="font-size:18px">${emoji}</span>
-    <div>
-      <div style="font-size:11px;font-weight:700;color:${color}">${label}</div>
-      <div style="display:flex;height:6px;width:80px;border-radius:3px;overflow:hidden;margin-top:2px">
-        <div style="width:${pctC}%;background:#16a34a"></div>
-        <div style="width:${pctP}%;background:#d97706"></div>
-        <div style="width:${pctI}%;background:#dc2626"></div>
-      </div>
-    </div>
-  </div>`;
-}
+// Indicadores adaptados (CUD/PPI/MEMO2)
+const INDS_ADAPT={
+  lengua:[
+    "Reconoce visualmente su nombre",
+    "Diferencia escritura de dibujo",
+    "Identifica letras significativas",
+    "Participa oralmente en la actividad",
+    "Mantiene atención durante la escucha",
+    "Reconoce personajes y acciones principales de cuentos",
+    "Se comunica mediante palabras, gestos o señalamientos",
+    "Diferencia letras de números",
+  ],
+  matematica:[
+    "Realiza correspondencia uno a uno",
+    "Cuenta colecciones pequeñas",
+    "Reconoce algunos números",
+    "Utiliza material concreto para resolver",
+    "Reconoce patrones simples y continúa secuencias",
+    "Compara longitudes con unidades no convencionales",
+    "Compone imágenes simples y reproduce modelos visuales",
+  ]
+};
 
 // ── ESTADO ───────────────────────────────────────────
 let STATE={
-  modo:"inicio",   // inicio | seccion | directivo
-  seccion:null,    // {id, grado, seccion, label}
-  tab:"carga",
-  allData:{},
-  loading:false,
-  busq:"",
-  modal:null,
-  del:null,
-  busqEst:"",
-  tablaGrado:"1°",
-  dirGrado:"1°",
-  dirSeccion:"A",
-  dirSel:null,
+  modo:"inicio",escuela:null,seccion:null,
+  tab:"carga",allData:{},loading:false,
+  busq:"",busqEst:"",
+  modal:null,del:null,
   corte:"Mayo",
+  dirGrado:"1°",dirSeccion:"A",
+  filtroMarca:"todos", // todos | especiales | regulares
 };
 function setState(p){Object.assign(STATE,typeof p==="function"?p(STATE):p);render();}
 async function dbGet(k){return window.dbGet?window.dbGet(k):null;}
@@ -152,86 +135,84 @@ function badge(v){
   const c=v==="Consolidado"?"badge-c":v==="En proceso"?"badge-p":"badge-i";
   return`<span class="badge ${c}">${v}</span>`;
 }
+function badgeAdapt(v){
+  if(!v)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
+  const c=v==="Logrado"?"badge-l":v==="En proceso"?"badge-ep":"badge-ra";
+  return`<span class="badge ${c}">${v}</span>`;
+}
 function badgeNivel(v){
   if(!v)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
-  const m={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasilábica":"#d97706","Alfabética":"#16a34a"};
+  const m={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasialfabética":"#d97706","Alfabética":"#16a34a"};
   const col=m[v]||"#475569";
   return`<span style="background:${col}18;color:${col};border:1px solid ${col}44;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700">${v}</span>`;
 }
-function barra(c=0,p=0,i=0,t){
-  if(!t)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
-  return`<div style="display:flex;align-items:center;gap:6px"><div style="width:80px;height:8px;border-radius:4px;overflow:hidden;display:flex;background:#e2e8f0"><div style="width:${Math.round(c/t*100)}%;background:#16a34a"></div><div style="width:${Math.round(p/t*100)}%;background:#d97706"></div><div style="width:${Math.round(i/t*100)}%;background:#dc2626"></div></div><span style="font-size:10px;color:#16a34a;font-weight:700">${Math.round(c/t*100)}%</span></div>`;
+function badgeMarca(marca){
+  if(!marca)return"";
+  const cols={"CUD":"#7c3aed","PPI":"#0ea5e9","MEMO2":"#ea580c"};
+  const col=cols[marca]||"#475569";
+  return`<span style="background:${col}18;color:${col};border:1px solid ${col}44;border-radius:20px;padding:2px 10px;font-size:10px;font-weight:800">♿ ${marca}</span>`;
+}
+function semaforo(ests,area,grado){
+  const inds=INDS[area][grado]||[];
+  if(!inds.length||!ests.length)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
+  let c=0,p=0,i=0,total=0;
+  ests.forEach(e=>{inds.forEach(ind=>{const v=e.indicadores?.[`${area}_${grado}_${ind}`];if(v){total++;if(v==="Consolidado")c++;else if(v==="En proceso")p++;else i++;}});});
+  if(!total)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
+  const pctC=Math.round(c/total*100),pctP=Math.round(p/total*100),pctI=Math.round(i/total*100);
+  let color,emoji,label;
+  if(pctC>=50){color="#16a34a";emoji="🟢";label=`${pctC}%`;}
+  else if(pctP>=50){color="#d97706";emoji="🟡";label=`${pctP}%`;}
+  else{color="#dc2626";emoji="🔴";label=`${pctI}%`;}
+  return`<div style="display:flex;align-items:center;gap:4px"><span style="font-size:16px">${emoji}</span><span style="font-size:10px;font-weight:700;color:${color}">${label}</span></div>`;
 }
 function leyenda(){
-  return`<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">${[["#16a34a","Consolidado"],["#d97706","En proceso"],["#dc2626","Incipiente"]].map(([c,l])=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:7px;padding:4px 12px"><div style="width:10px;height:10px;border-radius:50%;background:${c}"></div>${l}</div>`).join("")}</div>`;
+  return`<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+    ${[["#16a34a","Consolidado"],["#d97706","En proceso"],["#dc2626","Incipiente"]].map(([c,l])=>`<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#475569;background:#fff;border:1px solid #e2e8f0;border-radius:7px;padding:4px 12px"><div style="width:10px;height:10px;border-radius:50%;background:${c}"></div>${l}</div>`).join("")}
+    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#a21caf;background:#fdf4ff;border:1px solid #f0abfc;border-radius:7px;padding:4px 12px">♿ Requiere acompañamiento</div>
+  </div>`;
 }
 function loader(m="Cargando..."){return`<div class="loader"><div class="spinner"></div><p>${m}</p></div>`;}
 function selectorCorte(){
   return`<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
     <span style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px">Corte:</span>
-    ${CORTES.map(c=>`<button onclick="setState({corte:'${c}'})" style="padding:5px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${STATE.corte===c?"#6366f1":"#e2e8f0"};background:${STATE.corte===c?"#6366f1":"#fff"};color:${STATE.corte===c?"#fff":"#64748b"}">${c}</button>`).join("")}
+    ${CORTES.map(c=>`<button onclick="setState({corte:'${c}'})" style="padding:5px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${STATE.corte===c?"#be185d":"#e2e8f0"};background:${STATE.corte===c?"#be185d":"#fff"};color:${STATE.corte===c?"#fff":"#64748b"}">${c}</button>`).join("")}
   </div>`;
-}
-
-// ── GRÁFICOS ─────────────────────────────────────────
-function graficoBarra(titulo,etiquetas,counts,total,colors){
-  return`<div style="background:#f8fafc;border-radius:12px;padding:16px;border:1px solid #e2e8f0">
-    <div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:12px">${titulo}</div>
-    ${etiquetas.map((et,i)=>{const pct=Math.round((counts[i]||0)/total*100);return`
-      <div style="margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:#475569;margin-bottom:3px"><span>${et}</span><span style="font-weight:700">${counts[i]||0} (${pct}%)</span></div>
-        <div style="height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${colors[i%colors.length]};border-radius:5px"></div></div>
-      </div>`;}).join("")}
-  </div>`;
-}
-function graficoNiveles(estudiantes,grado,corte){
-  const ests=estudiantes.filter(e=>e.grado===grado);
-  if(!ests.length)return`<div style="text-align:center;padding:20px;color:#94a3b8;font-size:13px">Sin datos para graficar</div>`;
-  let html=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px">`;
-  if(["1°","2°","3°"].includes(grado)){
-    const counts=NIV_ESCRITURA.map(n=>ests.filter(e=>e[`escritura_${corte}`]===n).length);
-    html+=graficoBarra("✍️ Nivel de Escritura",NIV_ESCRITURA,counts,ests.length||1,["#7c3aed","#db2877","#ea580c","#d97706","#16a34a"]);
-  }
-  if(["1°","2°"].includes(grado)){
-    const counts=NIV_LECTURA_12.map(n=>ests.filter(e=>e[`lectura12_${corte}`]===n).length);
-    html+=graficoBarra("📖 Nivel de Lectura",NIV_LECTURA_12,counts,ests.length||1,["#7c3aed","#db2877","#16a34a"]);
-  }
-  if(["3°","4°","5°","6°"].includes(grado)){
-    ["Velocidad","Precisión","Prosodia"].forEach(dim=>{
-      const counts=LOGRO.map(v=>ests.filter(e=>e[`fluidez_${dim}_${corte}`]===v).length);
-      html+=graficoBarra(`📖 Fluidez · ${dim}`,LOGRO,counts,ests.length||1,["#16a34a","#d97706","#dc2626"]);
-    });
-  }
-  return html+`</div>`;
 }
 
 // ── VISTA INICIO ─────────────────────────────────────
 function vistaInicio(){
   const fl=SECCIONES_LIST.filter(s=>s.label.toLowerCase().includes(STATE.busq.toLowerCase()));
   const porGrado=GRADOS.map(g=>({grado:g,secs:fl.filter(s=>s.grado===g)})).filter(x=>x.secs.length);
-  return`<div style="min-height:100vh;background:linear-gradient(160deg,#0f172a 0%,#1a3558 55%,#0f2438 100%);display:flex;align-items:center;justify-content:center;padding:24px">
+  return`<div style="min-height:100vh;background:linear-gradient(160deg,#fff1f2 0%,#fda4af 45%,#fb7185 75%,#f43f5e 100%);display:flex;align-items:center;justify-content:center;padding:24px">
     <div style="width:100%;max-width:600px">
       <div style="text-align:center;margin-bottom:28px">
-        <div style="display:inline-block;background:#ffffff10;border-radius:12px;padding:8px 20px;margin-bottom:12px;border:1px solid #ffffff1a">
-          <span style="color:#94a3b8;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase">Escuela José María Paz</span>
+        <div style="display:inline-block;background:#ffffff30;border-radius:12px;padding:8px 20px;margin-bottom:12px;border:1px solid #ffffff40">
+          <span style="color:#881337;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase">Escuela José María Paz</span>
         </div>
-        <h1 style="font-family:'Playfair Display',serif;color:#fff;font-size:34px;margin:0 0 2px;line-height:1.1">Trayectorias Cuidadas</h1>
-        <div style="color:#60a5fa;font-weight:700;font-size:16px;margin-bottom:6px">Aprendizajes Significativos</div>
-        <div style="color:#94a3b8;font-size:12px;margin-bottom:4px">Directora: <span style="color:#e2e8f0;font-weight:700">María de Fátima Díaz</span></div>
-        <div style="color:#94a3b8;font-size:12px;margin-bottom:10px">Docente Facilitadora M+M: <span style="color:#e2e8f0;font-weight:700">Gabriela Pafume</span></div>
-        <p style="color:#64748b;font-size:13px;margin:0">Lengua y Matemática · 1° a 6° · Secciones A B C D<br/>Cortes: Mayo · Agosto · Diciembre</p>
+        <h1 style="font-family:'Playfair Display',serif;color:#fff;font-size:34px;margin:0 0 2px;line-height:1.1;text-shadow:0 2px 8px #f43f5e44">Trayectorias Cuidadas</h1>
+        <div style="color:#fff;font-weight:700;font-size:17px;margin-bottom:10px">Aprendizajes Significativos</div>
+        <div style="background:#ffffff25;border-radius:12px;padding:12px 18px;margin-bottom:10px;border:1px solid #ffffff30">
+          <div style="font-size:10px;color:#881337;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Directora</div>
+          <div style="font-family:'Playfair Display',serif;color:#fff;font-size:20px;font-weight:700">María de Fátima Díaz</div>
+        </div>
+        <div style="color:#881337;font-size:12px;margin-bottom:6px">Docente Facilitadora M+M: <span style="color:#fff;font-weight:700">Gabriela Pafume</span></div>
+        <div style="color:#881337;font-size:11px;margin-bottom:10px">Lic. en Educación · Especialista en Alfabetización · Desarrollo de Herramientas Digitales</div>
+        <p style="color:#881337;font-size:13px;margin:0">Lengua y Matemática · 1° a 6° · Secciones A B C D<br/>Cortes: Mayo · Agosto · Diciembre</p>
+        <div style="margin-top:10px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap">
+          ${["CUD","PPI","MEMO2"].map(m=>`<span style="background:#ffffff25;border:1px solid #ffffff40;border-radius:20px;padding:3px 12px;font-size:11px;color:#fff;font-weight:700">♿ ${m}</span>`).join("")}
+        </div>
       </div>
 
-      <div style="background:#ffffff0d;border:1px solid #ffffff18;border-radius:18px;padding:20px;margin-bottom:12px">
+      <div style="background:#ffffff20;border:1px solid #ffffff30;border-radius:18px;padding:20px;margin-bottom:12px">
         <div style="font-weight:700;color:#fff;font-size:15px;margin-bottom:4px">📚 Acceso Docente por Sección</div>
-        <p style="color:#64748b;font-size:13px;margin-bottom:14px">Seleccioná tu grado y sección</p>
-        <input value="${STATE.busq}" placeholder="Buscar sección..." style="background:#ffffff12;color:#fff;border:1px solid #ffffff25;margin-bottom:12px" oninput="setState({busq:this.value})"/>
+        <p style="color:#881337;font-size:13px;margin-bottom:14px">Seleccioná tu grado y sección</p>
+        <input value="${STATE.busq}" placeholder="Buscar sección..." style="background:#ffffff20;color:#1e293b;border:1px solid #ffffff30;margin-bottom:12px" oninput="setState({busq:this.value})"/>
         <div style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:10px">
           ${porGrado.map(({grado,secs})=>`
             <div>
-              <div style="color:#60a5fa;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px">${grado} Grado</div>
+              <div style="color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px">${grado} Grado</div>
               <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px">
-                ${secs.map(s=>`<button onclick="selSeccion('${s.id}')" style="background:#ffffff08;border:1px solid #ffffff18;border-radius:9px;padding:10px 6px;color:#e2e8f0;cursor:pointer;font-weight:700;font-size:13px;font-family:'Source Sans 3',sans-serif;text-align:center">
+                ${secs.map(s=>`<button onclick="selSeccion('${s.id}')" style="background:#ffffff15;border:1px solid #ffffff25;border-radius:9px;padding:10px 6px;color:#fff;cursor:pointer;font-weight:700;font-size:13px;font-family:'Source Sans 3',sans-serif;text-align:center">
                   Sección ${s.seccion}
                 </button>`).join("")}
               </div>
@@ -239,37 +220,45 @@ function vistaInicio(){
         </div>
       </div>
 
-      <button onclick="irDirectivo()" style="width:100%;background:linear-gradient(135deg,#065f46,#059669);color:#fff;border:none;border-radius:14px;padding:18px 24px;font-weight:700;font-size:16px;cursor:pointer;font-family:'Source Sans 3',sans-serif">
+      <button onclick="irDirectivo()" style="width:100%;background:#881337;color:#fff;border:none;border-radius:14px;padding:18px 24px;font-weight:700;font-size:16px;cursor:pointer;font-family:'Source Sans 3',sans-serif;box-shadow:0 4px 20px #f43f5e44">
         🏫 Vista Directivo · Toda la Escuela
       </button>
-      <p style="color:#1e3a5f;font-size:11px;text-align:center;margin-top:16px">Datos guardados en la nube · Firebase</p>
+      <p style="color:#881337;font-size:11px;text-align:center;margin-top:16px">Datos guardados en la nube · Firebase</p>
     </div>
   </div>`;
 }
 
-// ── HEADER ───────────────────────────────────────────
 function header(t,s){
-  return`<div class="no-print" style="background:#0f172a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;border-bottom:1px solid #1e293b">
-    <div><div style="font-family:'Playfair Display',serif;color:#fff;font-size:17px">${t}</div>${s?`<div style="color:#64748b;font-size:12px">${s}</div>`:""}</div>
-    <button onclick="irInicio()" style="background:#1e293b;color:#94a3b8;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:13px;font-weight:600;font-family:'Source Sans 3',sans-serif">← Inicio</button>
+  return`<div class="no-print" style="background:linear-gradient(90deg,#881337,#be185d);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+    <div><div style="font-family:'Playfair Display',serif;color:#fff;font-size:17px">${t}</div>${s?`<div style="color:#fda4af;font-size:12px">${s}</div>`:""}</div>
+    <button onclick="irInicio()" style="background:#ffffff20;color:#fff;border:none;border-radius:8px;padding:7px 16px;cursor:pointer;font-size:13px;font-weight:600;font-family:'Source Sans 3',sans-serif">← Inicio</button>
   </div>`;
 }
 
-// ── VISTA SECCIÓN (DOCENTE) ──────────────────────────
+// ── VISTA SECCIÓN ─────────────────────────────────────
 function vistaSeccion(){
   const sec=STATE.seccion;
-  const ests=STATE.allData[sec.id]||[];
-  return`${header(`${sec.label} · José María Paz`,`${ests.length} estudiantes · Trayectorias Cuidadas`)}
+  const todos=STATE.allData[sec.id]||[];
+  const especiales=todos.filter(e=>e.marca);
+  const regulares=todos.filter(e=>!e.marca);
+  return`${header(`${sec.label} · José María Paz`,`${todos.length} estudiantes · ${especiales.length} con adaptaciones`)}
   <div style="padding:24px;max-width:1100px;margin:0 auto">
     <div class="no-print" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-      ${["carga","tabla","graficos"].map(t=>`<button class="btn-tab" onclick="setState({tab:'${t}'})"
-        style="border-color:${STATE.tab===t?"#1e293b":"#e2e8f0"};background:${STATE.tab===t?"#1e293b":"#fff"};color:${STATE.tab===t?"#fff":"#64748b"}">
-        ${t==="carga"?"✏️ Cargar datos":t==="tabla"?"📊 Tabla":t==="graficos"?"📈 Gráficos":""}</button>`).join("")}
+      ${["carga","tabla"].map(t=>`<button class="btn-tab" onclick="setState({tab:'${t}'})"
+        style="border-color:${STATE.tab===t?"#be185d":"#e2e8f0"};background:${STATE.tab===t?"#be185d":"#fff"};color:${STATE.tab===t?"#fff":"#64748b"}">
+        ${t==="carga"?"✏️ Cargar datos":"📊 Tabla"}</button>`).join("")}
       <button onclick="imprimirFicha()" class="btn-tab no-print" style="border-color:#6366f1;background:#6366f1;color:#fff">🖨️ Imprimir PDF</button>
     </div>
     ${leyenda()}
+
+    <!-- Filtro -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+      ${[["todos","👥 Todos","#1e293b"],["regulares","📋 Sin adaptaciones","#0369a1"],["especiales","♿ CUD/PPI/MEMO2","#a21caf"]].map(([v,l,c])=>`
+        <button onclick="setState({filtroMarca:'${v}'})" style="padding:6px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${STATE.filtroMarca===v?c:"#e2e8f0"};background:${STATE.filtroMarca===v?c:"#fff"};color:${STATE.filtroMarca===v?"#fff":"#475569"}">${l}</button>`).join("")}
+    </div>
+
     <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001">
-      ${STATE.loading?loader():STATE.tab==="carga"?vistaCarga():STATE.tab==="tabla"?vistaTabla():vistaGraficosSeccion()}
+      ${STATE.loading?loader():STATE.tab==="carga"?vistaCarga():vistaTabla()}
     </div>
   </div>
   ${STATE.modal?modalEstudiante():""}${STATE.del?modalConfirmarBorrar():""}`;
@@ -277,9 +266,12 @@ function vistaSeccion(){
 
 function vistaCarga(){
   const secId=STATE.seccion.id;
-  const ests=(STATE.allData[secId]||[])
-    .filter(e=>!STATE.busqEst||`${e.apellido} ${e.nombre}`.toLowerCase().includes(STATE.busqEst.toLowerCase()))
-    .sort((a,b)=>a.apellido.localeCompare(b.apellido));
+  let ests=(STATE.allData[secId]||[]);
+  if(STATE.filtroMarca==="especiales") ests=ests.filter(e=>e.marca);
+  else if(STATE.filtroMarca==="regulares") ests=ests.filter(e=>!e.marca);
+  if(STATE.busqEst) ests=ests.filter(e=>`${e.apellido} ${e.nombre}`.toLowerCase().includes(STATE.busqEst.toLowerCase()));
+  ests=ests.sort((a,b)=>a.apellido.localeCompare(b.apellido));
+
   return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
       <input style="width:180px" value="${STATE.busqEst}" placeholder="Buscar estudiante..." oninput="setState({busqEst:this.value})"/>
@@ -288,272 +280,238 @@ function vistaCarga(){
     </div>
     <button class="btn-primary" onclick="abrirModal()">+ Agregar estudiante</button>
   </div>
-  ${ests.length===0?`<div style="text-align:center;padding:48px;color:#94a3b8;border:2px dashed #e2e8f0;border-radius:14px">
-    <div style="font-size:44px;margin-bottom:10px">👤</div><p style="font-weight:700">Sin estudiantes cargados</p>
-    <p style="font-size:13px">Hacé clic en "+ Agregar estudiante" para comenzar</p></div>`:
-  ests.map(e=>`<div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px 16px;margin-bottom:8px">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
-      <div>
-        <div style="font-weight:700;font-size:14px;color:#1e293b">${e.apellido}, ${e.nombre}</div>
-        <div style="font-size:12px;color:#94a3b8">${STATE.seccion.label}</div>
+  ${ests.length===0?`<div style="text-align:center;padding:48px;color:#94a3b8;border:2px dashed #fda4af;border-radius:14px">
+    <div style="font-size:44px;margin-bottom:10px">👤</div><p style="font-weight:700">Sin estudiantes</p></div>`:
+  ests.map(e=>{
+    const esEspecial=!!e.marca;
+    return`<div style="background:${esEspecial?"#fdf4ff":"#fff7f7"};border:1.5px solid ${esEspecial?"#f0abfc":"#fda4af44"};border-radius:12px;padding:12px 16px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-weight:700;font-size:14px;color:#1e293b;display:flex;align-items:center;gap:8px">
+            ${e.apellido}, ${e.nombre}
+            ${e.marca?badgeMarca(e.marca):""}
+          </div>
+          <div style="font-size:12px;color:#94a3b8">${STATE.seccion.label}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button onclick='editarEst(${JSON.stringify(e).replace(/'/g,"&#39;")})' style="background:#fff;color:#be185d;border:1.5px solid #fda4af;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif">Editar</button>
+          <button onclick='confirmarBorrar(${JSON.stringify(e).replace(/'/g,"&#39;")})' style="background:#fef2f2;color:#ef4444;border:none;border-radius:7px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif">✕</button>
+        </div>
       </div>
-      <div style="display:flex;gap:6px">
-        <button onclick='editarEst(${JSON.stringify(e).replace(/'/g,"&#39;")})' style="background:#eff6ff;color:#3b82f6;border:none;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif">Editar</button>
-        <button onclick='confirmarBorrar(${JSON.stringify(e).replace(/'/g,"&#39;")})' style="background:#fef2f2;color:#ef4444;border:none;border-radius:7px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif">✕</button>
-      </div>
-    </div>
-    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      ${["1°","2°","3°"].includes(STATE.seccion.grado)?`${e[`escritura_${STATE.corte}`]?`<span style="font-size:11px;color:#7c3aed;font-weight:700">✍️</span>${badgeNivel(e[`escritura_${STATE.corte}`])}`:""}`:""} 
-      ${["1°","2°"].includes(STATE.seccion.grado)?`${e[`lectura12_${STATE.corte}`]?`<span style="font-size:11px;color:#db2877;font-weight:700">📖</span>${badgeNivel(e[`lectura12_${STATE.corte}`])}`:""}`:""} 
-    </div>
-  </div>`).join("")}`;
+      ${esEspecial?`
+        <div style="margin-top:8px;background:#fdf4ff;border-radius:8px;padding:8px;font-size:11px;color:#475569">
+          <span style="font-weight:700;color:#a21caf">♿ Indicadores adaptados · Corte ${STATE.corte}</span>
+          <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">
+            ${INDS_ADAPT.lengua.slice(0,3).map(ind=>{const v=e.indicadores_adapt?.[`lengua_${ind}`];return v?badgeAdapt(v):"";}).filter(Boolean).join("")}
+          </div>
+          ${e[`nivel_escritura_adapt_${STATE.corte}`]?`<div style="margin-top:4px">✍️ ${badgeNivel(e[`nivel_escritura_adapt_${STATE.corte}`])}</div>`:""}
+        </div>`:""}
+      ${e.trayectoria?`<div style="margin-top:8px;font-size:11px;color:#64748b;font-style:italic;border-top:1px solid #fda4af44;padding-top:6px">📝 ${e.trayectoria}</div>`:""}
+    </div>`;
+  }).join("")}`;
 }
 
 function vistaTabla(){
   const g=STATE.seccion.grado;
-  const al=(STATE.allData[STATE.seccion.id]||[]).sort((a,b)=>a.apellido.localeCompare(b.apellido));
+  let al=(STATE.allData[STATE.seccion.id]||[]).sort((a,b)=>a.apellido.localeCompare(b.apellido));
+  if(STATE.filtroMarca==="especiales") al=al.filter(e=>e.marca);
+  else if(STATE.filtroMarca==="regulares") al=al.filter(e=>!e.marca);
   const iL=INDS.lengua[g]||[],iM=INDS.matematica[g]||[];
+  const hayEspeciales=al.some(e=>e.marca);
   return`${selectorCorte()}
   <div style="margin-top:12px;overflow-x:auto">
-    ${al.length===0?`<div style="text-align:center;padding:40px;color:#94a3b8">Sin datos cargados</div>`:`
-    <table style="width:100%;border-collapse:separate;border-spacing:0;font-size:11px">
-      <thead>
-        <tr>
-          <th style="background:#1e293b" rowspan="2">Alumno/a</th>
-          ${["1°","2°","3°"].includes(g)?`<th style="background:#7c3aed;text-align:center">✍️ Escritura</th>`:""}
-          ${["1°","2°"].includes(g)?`<th style="background:#db2877;text-align:center">📖 Lectura</th>`:""}
-          ${["3°","4°","5°","6°"].includes(g)?`<th style="background:#0ea5e9;text-align:center" colspan="3">📖 Fluidez</th>`:""}
-          <th style="background:#4338ca;text-align:center" colspan="${iL.length}">📚 Lengua</th>
-          <th style="background:#0369a1;text-align:center" colspan="${iM.length}">🔢 Matemática</th>
-        </tr>
-        <tr style="background:#334155">
-          ${["1°","2°","3°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
-          ${["1°","2°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
-          ${["3°","4°","5°","6°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Velocidad</th><th style="padding:8px 10px;color:#fff;font-size:10px">Precisión</th><th style="padding:8px 10px;color:#fff;font-size:10px">Prosodia</th>`:""}
-          ${[...iL,...iM].map(i=>`<th style="padding:8px 10px;color:#fff;font-size:10px;max-width:90px;white-space:normal;line-height:1.3;text-align:left">${i}</th>`).join("")}
-        </tr>
-      </thead>
-      <tbody>
-        ${al.map((e,idx)=>`<tr style="background:${idx%2===0?"#f8fafc":"#fff"}">
+  ${al.length===0?`<div style="text-align:center;padding:40px;color:#94a3b8">Sin datos</div>`:`
+  <table style="width:100%;border-collapse:separate;border-spacing:0;font-size:11px">
+    <thead>
+      <tr>
+        <th style="background:#1e293b" rowspan="2">Alumno/a</th>
+        <th style="background:#a21caf;text-align:center" rowspan="2">Tipo</th>
+        ${["1°","2°","3°"].includes(g)?`<th style="background:#7c3aed;text-align:center">✍️ Escritura</th>`:""}
+        ${["1°","2°"].includes(g)?`<th style="background:#db2877;text-align:center">📖 Lectura</th>`:""}
+        ${["3°","4°","5°","6°"].includes(g)?`<th style="background:#0ea5e9;text-align:center" colspan="3">📖 Fluidez</th>`:""}
+        <th style="background:#4338ca;text-align:center" colspan="${iL.length}">📚 Lengua</th>
+        <th style="background:#0369a1;text-align:center" colspan="${iM.length}">🔢 Matemática</th>
+      </tr>
+      <tr style="background:#334155">
+        <th style="padding:8px 10px;color:#fff;font-size:10px"></th>
+        ${["1°","2°","3°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
+        ${["1°","2°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
+        ${["3°","4°","5°","6°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Velocidad</th><th style="padding:8px 10px;color:#fff;font-size:10px">Precisión</th><th style="padding:8px 10px;color:#fff;font-size:10px">Prosodia</th>`:""}
+        ${[...iL,...iM].map(i=>`<th style="padding:8px 10px;color:#fff;font-size:10px;max-width:90px;white-space:normal;line-height:1.3;text-align:left">${i}</th>`).join("")}
+      </tr>
+    </thead>
+    <tbody>
+      ${al.map((e,idx)=>{
+        const esEsp=!!e.marca;
+        return`<tr style="background:${esEsp?"#fdf4ff":idx%2===0?"#fff7f7":"#fff"}">
           <td style="font-weight:700;white-space:nowrap">${e.apellido}, ${e.nombre}</td>
-          ${["1°","2°","3°"].includes(g)?`<td style="text-align:center">${badgeNivel(e[`escritura_${STATE.corte}`])}</td>`:""}
-          ${["1°","2°"].includes(g)?`<td style="text-align:center">${badgeNivel(e[`lectura12_${STATE.corte}`])}</td>`:""}
-          ${["3°","4°","5°","6°"].includes(g)?`<td style="text-align:center">${badge(e[`fluidez_Velocidad_${STATE.corte}`])}</td><td style="text-align:center">${badge(e[`fluidez_Precisión_${STATE.corte}`])}</td><td style="text-align:center">${badge(e[`fluidez_Prosodia_${STATE.corte}`])}</td>`:""}
-          ${iL.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`lengua_${g}_${ind}`])}</td>`).join("")}
-          ${iM.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`matematica_${g}_${ind}`])}</td>`).join("")}
-        </tr>`).join("")}
-      </tbody>
-    </table>`}
-  </div>`;
-}
-
-function vistaGraficosSeccion(){
-  const ests=STATE.allData[STATE.seccion.id]||[];
-  return`<div>
-    ${selectorCorte()}
-    <div style="font-weight:700;font-size:15px;color:#1e293b;margin:12px 0 4px">${STATE.seccion.label} · Corte ${STATE.corte}</div>
-    <div style="font-size:12px;color:#94a3b8;margin-bottom:12px">${ests.length} estudiantes</div>
-    ${graficoNiveles(ests,STATE.seccion.grado,STATE.corte)}
-  </div>`;
-}
-
-// ── VISTA DIRECTIVO ──────────────────────────────────
-function vistaDirectivo(){
-  const g=STATE.dirGrado, s=STATE.dirSeccion;
-  const secId=`${g}${s}`;
-  const indsL=INDS.lengua[g]||[], indsM=INDS.matematica[g]||[];
-
-  // Stats para una sección
-  const statsArea=(id,area)=>{
-    const ests=(STATE.allData[id]||[]);
-    const inds=area==="lengua"?INDS.lengua[g]||[]:INDS.matematica[g]||[];
-    return inds.map(ind=>{
-      const k=`${area}_${g}_${ind}`;
-      const vs=ests.map(e=>e.indicadores?.[k]).filter(Boolean);
-      return{ind,c:vs.filter(v=>v==="Consolidado").length,p:vs.filter(v=>v==="En proceso").length,i:vs.filter(v=>v==="Incipiente").length,total:vs.length};
-    });
-  };
-
-  const ests=STATE.allData[secId]||[];
-
-  return`${header("Vista Directivo · José María Paz","Trayectorias Cuidadas · Aprendizajes Significativos")}
-  <div style="padding:24px;max-width:1400px;margin:0 auto">
-    ${leyenda()}
-
-    <!-- Selector grado + sección -->
-    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:flex-end">
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:4px;text-transform:uppercase">Grado</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${GRADOS.map(gr=>`<button onclick="setState({dirGrado:'${gr}'})" style="padding:7px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${g===gr?"#1e293b":"#e2e8f0"};background:${g===gr?"#1e293b":"#fff"};color:${g===gr?"#fff":"#475569"}">${gr}</button>`).join("")}
-        </div>
-      </div>
-      <div>
-        <div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:4px;text-transform:uppercase">Sección</div>
-        <div style="display:flex;gap:6px">
-          ${SECCIONES.map(sc=>`<button onclick="setState({dirSeccion:'${sc}'})" style="padding:7px 16px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${s===sc?"#059669":"#e2e8f0"};background:${s===sc?"#059669":"#fff"};color:${s===sc?"#fff":"#475569"}">Sección ${sc}</button>`).join("")}
-        </div>
-      </div>
-      ${selectorCorte()}
-    </div>
-
-    <!-- Resumen sección seleccionada -->
-    <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-        <div style="font-family:'Playfair Display',serif;font-size:18px;color:#1e293b">${g} Sección ${s} · ${ests.length} estudiantes</div>
-      </div>
-      ${STATE.loading?loader():ests.length===0?`<div style="text-align:center;padding:32px;color:#94a3b8;border:2px dashed #e2e8f0;border-radius:12px">Sin datos cargados para esta sección</div>`:`
-      <div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0;font-size:11px">
-        <thead>
-          <tr>
-            <th style="background:#1e293b" rowspan="2">Alumno/a</th>
-            ${["1°","2°","3°"].includes(g)?`<th style="background:#7c3aed;text-align:center">✍️ Escritura</th>`:""}
-            ${["1°","2°"].includes(g)?`<th style="background:#db2877;text-align:center">📖 Lectura</th>`:""}
-            ${["3°","4°","5°","6°"].includes(g)?`<th style="background:#0ea5e9;text-align:center" colspan="3">📖 Fluidez</th>`:""}
-            <th style="background:#4338ca;text-align:center" colspan="${indsL.length}">📚 Lengua</th>
-            <th style="background:#0369a1;text-align:center" colspan="${indsM.length}">🔢 Matemática</th>
-          </tr>
-          <tr style="background:#334155">
-            ${["1°","2°","3°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
-            ${["1°","2°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
-            ${["3°","4°","5°","6°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Velocidad</th><th style="padding:8px 10px;color:#fff;font-size:10px">Precisión</th><th style="padding:8px 10px;color:#fff;font-size:10px">Prosodia</th>`:""}
-            ${[...indsL,...indsM].map(i=>`<th style="padding:8px 10px;color:#fff;font-size:10px;max-width:90px;white-space:normal;line-height:1.3;text-align:left">${i}</th>`).join("")}
-          </tr>
-        </thead>
-        <tbody>
-          ${ests.sort((a,b)=>a.apellido.localeCompare(b.apellido)).map((e,idx)=>`<tr style="background:${idx%2===0?"#f8fafc":"#fff"}">
-            <td style="font-weight:700;white-space:nowrap">${e.apellido}, ${e.nombre}</td>
-            ${["1°","2°","3°"].includes(g)?`<td style="text-align:center">${badgeNivel(e[`escritura_${STATE.corte}`])}</td>`:""}
-            ${["1°","2°"].includes(g)?`<td style="text-align:center">${badgeNivel(e[`lectura12_${STATE.corte}`])}</td>`:""}
-            ${["3°","4°","5°","6°"].includes(g)?`<td style="text-align:center">${badge(e[`fluidez_Velocidad_${STATE.corte}`])}</td><td style="text-align:center">${badge(e[`fluidez_Precisión_${STATE.corte}`])}</td><td style="text-align:center">${badge(e[`fluidez_Prosodia_${STATE.corte}`])}</td>`:""}
-            ${indsL.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`lengua_${g}_${ind}`])}</td>`).join("")}
-            ${indsM.map(ind=>`<td style="text-align:center">${badge(e.indicadores?.[`matematica_${g}_${ind}`])}</td>`).join("")}
-          </tr>`).join("")}
-        </tbody>
-      </table></div>
-      <div style="margin-top:20px">${graficoNiveles(ests,g,STATE.corte)}</div>`}
-    </div>
-
-    <!-- Resumen general todas las secciones -->
-    <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001">
-      <div style="font-family:'Playfair Display',serif;font-size:16px;color:#1e293b;margin-bottom:16px">📊 Resumen · ${g} Grado · Todas las secciones</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
-        ${SECCIONES.map(sc=>{
-          const sid=`${g}${sc}`;
-          const ests=STATE.allData[sid]||[];
-          const total=ests.length;
-          return`<div style="background:#f8fafc;border-radius:12px;padding:16px;border:1.5px solid #e2e8f0;cursor:pointer" onclick="setState({dirSeccion:'${sc}'})">
-            <div style="font-weight:700;font-size:15px;color:#1e293b;margin-bottom:4px">${g} Sección ${sc}</div>
-            <div style="font-size:22px;font-weight:900;color:${total>0?"#0369a1":"#cbd5e1"};margin-bottom:10px">${total} <span style="font-size:12px;font-weight:400;color:#94a3b8">estudiantes</span></div>
-            <div style="display:flex;flex-direction:column;gap:6px">
-              <div style="font-size:10px;font-weight:700;color:#4338ca;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">📚 Lengua</div>
-              ${semaforo(ests,g,"lengua")}
-              <div style="font-size:10px;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.5px;margin-top:6px;margin-bottom:2px">🔢 Matemática</div>
-              ${semaforo(ests,g,"matematica")}
-            </div>
-          </div>`;
-        }).join("")}
-      </div>
-    </div>
+          <td style="text-align:center">${e.marca?badgeMarca(e.marca):`<span style="color:#cbd5e1;font-size:10px">—</span>`}</td>
+          ${["1°","2°","3°"].includes(g)?`<td style="text-align:center">${esEsp?badgeNivel(e[`nivel_escritura_adapt_${STATE.corte}`]):badgeNivel(e[`escritura_${STATE.corte}`])}</td>`:""}
+          ${["1°","2°"].includes(g)?`<td style="text-align:center">${esEsp?`<span style="color:#a21caf;font-size:10px">Adaptado</span>`:badgeNivel(e[`lectura12_${STATE.corte}`])}</td>`:""}
+          ${["3°","4°","5°","6°"].includes(g)?`<td style="text-align:center">${esEsp?`<span style="color:#a21caf;font-size:10px">Adapt.</span>`:badge(e[`fluidez_Velocidad_${STATE.corte}`])}</td><td style="text-align:center">${esEsp?"":badge(e[`fluidez_Precisión_${STATE.corte}`])}</td><td style="text-align:center">${esEsp?"":badge(e[`fluidez_Prosodia_${STATE.corte}`])}</td>`:""}
+          ${iL.map(ind=>`<td style="text-align:center">${esEsp?`<span style="color:#a21caf;font-size:10px">Adapt.</span>`:badge(e.indicadores?.[`lengua_${g}_${ind}`])}</td>`).join("")}
+          ${iM.map(ind=>`<td style="text-align:center">${esEsp?`<span style="color:#a21caf;font-size:10px">Adapt.</span>`:badge(e.indicadores?.[`matematica_${g}_${ind}`])}</td>`).join("")}
+        </tr>`;
+      }).join("")}
+    </tbody>
+  </table>`}
   </div>`;
 }
 
 // ── MODAL ESTUDIANTE ─────────────────────────────────
 function modalEstudiante(){
   const m=STATE.modal;
-  const e=m.est||{apellido:"",nombre:"",indicadores:{},observaciones:""};
+  const e=m.est||{apellido:"",nombre:"",marca:"",indicadores:{},indicadores_adapt:{},observaciones:"",trayectoria:""};
   const g=STATE.seccion.grado;
+  const esEspecial=!!e.marca;
 
-  const bloqueEscritura=()=>{
-    if(!["1°","2°","3°"].includes(g))return"";
-    return`<div style="margin-bottom:18px">
-      <div style="font-weight:700;color:#7c3aed;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #7c3aed">✍️ Nivel de Escritura (Kauffman)</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-        ${CORTES.map(c=>{const v=e[`escritura_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
-          <div style="font-size:11px;color:#7c3aed;margin-bottom:5px;font-weight:700">📅 ${c}</div>
-          <select data-key="escritura_${c}" onchange="updateExtra('escritura_${c}',this.value)" style="font-size:12px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #7c3aed44;background:#f5f3ff;color:#7c3aed;width:auto">
-            <option value="">— nivel —</option>
-            ${NIV_ESCRITURA.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
-          </select>
-        </div>`;}).join("")}
+  const bloqueAdaptado=()=>{
+    if(!esEspecial)return"";
+    return`<div style="background:#fdf4ff;border:2px solid #f0abfc;border-radius:14px;padding:18px;margin-bottom:18px">
+      <div style="font-weight:700;color:#a21caf;font-size:14px;margin-bottom:16px">♿ Indicadores Adaptados · ${e.marca}</div>
+
+      <!-- Nivel escritura adaptado -->
+      <div style="margin-bottom:16px">
+        <div style="font-weight:700;color:#7c3aed;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #7c3aed">✍️ Nivel de Escritura</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          ${CORTES.map(c=>{const v=e[`nivel_escritura_adapt_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
+            <div style="font-size:11px;color:#7c3aed;margin-bottom:5px;font-weight:700">📅 ${c}</div>
+            <select data-key="nivel_escritura_adapt_${c}" onchange="updateExtra('nivel_escritura_adapt_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #7c3aed44;background:#f5f3ff;color:#7c3aed;width:auto">
+              <option value="">— nivel —</option>${NIV_ESCRITURA.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
+            </select></div>`;}).join("")}
+        </div>
+      </div>
+
+      <!-- Indicadores lengua adaptados -->
+      <div style="margin-bottom:16px">
+        <div style="font-weight:700;color:#4338ca;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #4338ca">📚 Lengua Adaptada</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          ${INDS_ADAPT.lengua.map(ind=>{const k=`lengua_${ind}`,v=e.indicadores_adapt?.[k]||"";
+            const bg=v?{Logrado:"#f0fdf4","En proceso":"#fffbeb","Requiere acompañamiento":"#fdf4ff"}[v]:"#f8fafc";
+            const fg=v?{Logrado:"#16a34a","En proceso":"#d97706","Requiere acompañamiento":"#a21caf"}[v]:"#94a3b8";
+            return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
+              <div style="font-size:11px;color:#475569;margin-bottom:5px;font-weight:600">${ind}</div>
+              <select data-adapt="${k}" onchange="updateAdapt('${k}',this.value)" style="background:${bg};color:${fg};border:1.5px solid ${fg}44;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:auto">
+                <option value="">— logro —</option>${LOGRO_ADAPT.map(l=>`<option value="${l}" ${v===l?"selected":""}>${l}</option>`).join("")}
+              </select></div>`;}).join("")}
+        </div>
+      </div>
+
+      <!-- Indicadores matemática adaptados -->
+      <div style="margin-bottom:8px">
+        <div style="font-weight:700;color:#0369a1;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #0369a1">🔢 Matemática Adaptada</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          ${INDS_ADAPT.matematica.map(ind=>{const k=`matematica_${ind}`,v=e.indicadores_adapt?.[k]||"";
+            const bg=v?{Logrado:"#f0fdf4","En proceso":"#fffbeb","Requiere acompañamiento":"#fdf4ff"}[v]:"#f8fafc";
+            const fg=v?{Logrado:"#16a34a","En proceso":"#d97706","Requiere acompañamiento":"#a21caf"}[v]:"#94a3b8";
+            return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
+              <div style="font-size:11px;color:#475569;margin-bottom:5px;font-weight:600">${ind}</div>
+              <select data-adapt="${k}" onchange="updateAdapt('${k}',this.value)" style="background:${bg};color:${fg};border:1.5px solid ${fg}44;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:auto">
+                <option value="">— logro —</option>${LOGRO_ADAPT.map(l=>`<option value="${l}" ${v===l?"selected":""}>${l}</option>`).join("")}
+              </select></div>`;}).join("")}
+        </div>
       </div>
     </div>`;
   };
 
-  const bloqueLectura=()=>{
-    if(!["1°","2°"].includes(g))return"";
-    return`<div style="margin-bottom:18px">
-      <div style="font-weight:700;color:#db2877;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #db2877">📖 Nivel de Lectura</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-        ${CORTES.map(c=>{const v=e[`lectura12_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
-          <div style="font-size:11px;color:#db2877;margin-bottom:5px;font-weight:700">📅 ${c}</div>
-          <select data-key="lectura12_${c}" onchange="updateExtra('lectura12_${c}',this.value)" style="font-size:12px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #db287744;background:#fdf2f8;color:#db2877;width:auto">
-            <option value="">— nivel —</option>
-            ${NIV_LECTURA_12.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
-          </select>
-        </div>`;}).join("")}
-      </div>
-    </div>`;
-  };
-
-  const bloqueFluidez=()=>{
-    if(!["3°","4°","5°","6°"].includes(g))return"";
-    return`<div style="margin-bottom:18px">
-      <div style="font-weight:700;color:#0ea5e9;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #0ea5e9">📖 Fluidez Lectora</div>
-      ${["Velocidad","Precisión","Prosodia"].map(dim=>`
-        <div style="margin-bottom:10px">
+  const bloqueGeneral=()=>{
+    if(esEspecial)return"";
+    const bloqueEscritura=()=>{
+      if(!["1°","2°","3°"].includes(g))return"";
+      return`<div style="margin-bottom:18px">
+        <div style="font-weight:700;color:#7c3aed;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #7c3aed">✍️ Nivel de Escritura (Kauffman)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          ${CORTES.map(c=>{const v=e[`escritura_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
+            <div style="font-size:11px;color:#7c3aed;margin-bottom:5px;font-weight:700">📅 ${c}</div>
+            <select data-key="escritura_${c}" onchange="updateExtra('escritura_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #7c3aed44;background:#f5f3ff;color:#7c3aed;width:auto">
+              <option value="">— nivel —</option>${NIV_ESCRITURA.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
+            </select></div>`;}).join("")}
+        </div></div>`;
+    };
+    const bloqueLectura=()=>{
+      if(!["1°","2°"].includes(g))return"";
+      return`<div style="margin-bottom:18px">
+        <div style="font-weight:700;color:#db2877;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #db2877">📖 Nivel de Lectura</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          ${CORTES.map(c=>{const v=e[`lectura12_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
+            <div style="font-size:11px;color:#db2877;margin-bottom:5px;font-weight:700">📅 ${c}</div>
+            <select data-key="lectura12_${c}" onchange="updateExtra('lectura12_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #db287744;background:#fdf2f8;color:#db2877;width:auto">
+              <option value="">— nivel —</option>${NIV_LECTURA_12.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
+            </select></div>`;}).join("")}
+        </div></div>`;
+    };
+    const bloqueFluidez=()=>{
+      if(!["3°","4°","5°","6°"].includes(g))return"";
+      return`<div style="margin-bottom:18px">
+        <div style="font-weight:700;color:#0ea5e9;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #0ea5e9">📖 Fluidez Lectora</div>
+        ${["Velocidad","Precisión","Prosodia"].map(dim=>`<div style="margin-bottom:10px">
           <div style="font-size:11px;font-weight:700;color:#475569;margin-bottom:6px">${dim}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
             ${CORTES.map(c=>{const k=`fluidez_${dim}_${c}`;const v=e[k]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
               <div style="font-size:11px;color:#0ea5e9;margin-bottom:5px;font-weight:700">📅 ${c}</div>
-              <select data-key="${k}" onchange="updateExtra('${k}',this.value)" style="font-size:12px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #0ea5e944;background:#f0f9ff;color:#0ea5e9;width:auto">
-                <option value="">— logro —</option>
-                ${LOGRO.map(l=>`<option ${v===l?"selected":""}>${l}</option>`).join("")}
-              </select>
-            </div>`;}).join("")}
-          </div>
-        </div>`).join("")}
-    </div>`;
-  };
-
-  const bloqueInds=(area,color,emoji)=>{
-    const inds=INDS[area][g]||[];
-    if(!inds.length)return"";
-    return`<div style="margin-bottom:18px">
-      <div style="font-weight:700;color:${color};font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid ${color}">${emoji} ${area==="lengua"?"Lengua":"Matemática"}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        ${inds.map(ind=>{const k=`${area}_${g}_${ind}`,v=e.indicadores?.[k]||"";
-          const bg=v?{Consolidado:"#f0fdf4","En proceso":"#fffbeb",Incipiente:"#fef2f2"}[v]:"#f8fafc";
-          const fg=v?{Consolidado:"#16a34a","En proceso":"#d97706",Incipiente:"#dc2626"}[v]:"#94a3b8";
-          return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
-            <div style="font-size:11px;color:#475569;margin-bottom:5px;font-weight:600">${ind}</div>
-            <select data-ind="${k}" onchange="updateInd('${k}',this.value)" style="background:${bg};color:${fg};border:1.5px solid ${fg}44;border-radius:8px;padding:4px 8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:auto">
-              <option value="">— seleccionar —</option>
-              ${LOGRO.map(l=>`<option value="${l}" ${v===l?"selected":""}>${l}</option>`).join("")}
-            </select>
-          </div>`;}).join("")}
-      </div>
-    </div>`;
+              <select data-key="${k}" onchange="updateExtra('${k}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #0ea5e944;background:#f0f9ff;color:#0ea5e9;width:auto">
+                <option value="">— logro —</option>${LOGRO.map(l=>`<option ${v===l?"selected":""}>${l}</option>`).join("")}
+              </select></div>`;}).join("")}
+          </div></div>`).join("")}
+      </div>`;
+    };
+    const bloqueInds=(area,color,emoji)=>{
+      const inds=INDS[area][g]||[];
+      if(!inds.length)return"";
+      return`<div style="margin-bottom:18px">
+        <div style="font-weight:700;color:${color};font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid ${color}">${emoji} ${area==="lengua"?"Lengua":"Matemática"}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          ${inds.map(ind=>{const k=`${area}_${g}_${ind}`,v=e.indicadores?.[k]||"";
+            const bg=v?{Consolidado:"#f0fdf4","En proceso":"#fffbeb",Incipiente:"#fef2f2"}[v]:"#f8fafc";
+            const fg=v?{Consolidado:"#16a34a","En proceso":"#d97706",Incipiente:"#dc2626"}[v]:"#94a3b8";
+            return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
+              <div style="font-size:11px;color:#475569;margin-bottom:5px;font-weight:600">${ind}</div>
+              <select data-ind="${k}" onchange="updateInd('${k}',this.value)" style="background:${bg};color:${fg};border:1.5px solid ${fg}44;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:auto">
+                <option value="">— seleccionar —</option>${LOGRO.map(l=>`<option value="${l}" ${v===l?"selected":""}>${l}</option>`).join("")}
+              </select></div>`;}).join("")}
+        </div></div>`;
+    };
+    return bloqueEscritura()+bloqueLectura()+bloqueFluidez()+bloqueInds("lengua","#6366f1","📚")+bloqueInds("matematica","#0ea5e9","🔢");
   };
 
   return`<div class="modal-overlay" onclick="if(event.target===this)cerrarModal()">
     <div class="modal-box">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <h3 style="font-family:'Playfair Display',serif;margin:0;font-size:20px;color:#1e293b">${m.mode==="new"?"Nuevo":"Editar"} estudiante · ${STATE.seccion.label}</h3>
-        <button onclick="cerrarModal()" style="background:none;border:none;font-size:26px;cursor:pointer;color:#94a3b8;line-height:1">×</button>
+        <h3 style="font-family:'Playfair Display',serif;margin:0;font-size:18px;color:#1e293b">${m.mode==="new"?"Nuevo":"Editar"} estudiante · ${STATE.seccion.label}</h3>
+        <button onclick="cerrarModal()" style="background:none;border:none;font-size:26px;cursor:pointer;color:#94a3b8">×</button>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px">
+
+      <!-- Datos básicos -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
         <div><label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Apellido</label>
           <input id="m-apellido" value="${e.apellido}" placeholder="Apellido"/></div>
         <div><label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Nombre</label>
           <input id="m-nombre" value="${e.nombre}" placeholder="Nombre"/></div>
       </div>
-      ${bloqueEscritura()}${bloqueLectura()}${bloqueFluidez()}
-      ${bloqueInds("lengua","#6366f1","📚")}${bloqueInds("matematica","#0ea5e9","🔢")}
-      <div style="margin-top:14px">
-        <label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Observaciones</label>
-        <textarea id="m-obs" rows="2" placeholder="Notas sobre la trayectoria...">${e.observaciones||""}</textarea>
+
+      <!-- Marca especial -->
+      <div style="background:#fdf4ff;border:1.5px solid #f0abfc;border-radius:12px;padding:14px;margin-bottom:18px">
+        <div style="font-size:12px;font-weight:700;color:#a21caf;margin-bottom:10px">♿ ¿Tiene certificado o programa especial?</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button onclick="toggleMarca('')" style="padding:6px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${!e.marca?"#1e293b":"#e2e8f0"};background:${!e.marca?"#1e293b":"#fff"};color:${!e.marca?"#fff":"#475569"}">Sin marca</button>
+          ${MARCAS_ESPECIALES.map(mc=>{
+            const cols={"CUD":"#7c3aed","PPI":"#0ea5e9","MEMO2":"#ea580c"};
+            const col=cols[mc];
+            return`<button onclick="toggleMarca('${mc}')" style="padding:6px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${e.marca===mc?col:"#e2e8f0"};background:${e.marca===mc?col:"#fff"};color:${e.marca===mc?"#fff":"#475569"}">♿ ${mc}</button>`;
+          }).join("")}
+        </div>
+        ${e.marca?`<div style="margin-top:8px;font-size:11px;color:#a21caf">✅ Este estudiante tendrá indicadores y escala adaptados</div>`:""}
       </div>
+
+      ${bloqueAdaptado()}
+      ${bloqueGeneral()}
+
+      <!-- Trayectoria -->
+      <div style="margin-top:14px">
+        <label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">📝 Trayectoria / Observaciones</label>
+        <textarea id="m-trayectoria" rows="3" placeholder="Redactá la trayectoria del estudiante, avances, contexto, intervenciones...">${e.trayectoria||""}</textarea>
+      </div>
+
       <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">
         <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
         <button class="btn-primary" onclick="guardarEstudiante()">Guardar</button>
@@ -564,7 +522,7 @@ function modalEstudiante(){
 
 function modalConfirmarBorrar(){
   const e=STATE.del;
-  return`<div class="modal-overlay"><div style="background:#fff;border-radius:14px;padding:28px;max-width:360px;width:90vw;font-family:'Source Sans 3',sans-serif">
+  return`<div class="modal-overlay"><div style="background:#fff;border-radius:14px;padding:28px;max-width:360px;width:90vw">
     <p style="font-weight:700;margin-bottom:8px">¿Eliminar a <b>${e.apellido}, ${e.nombre}</b>?</p>
     <p style="font-size:13px;color:#64748b;margin-bottom:20px">Esta acción no se puede deshacer.</p>
     <div style="display:flex;gap:10px;justify-content:flex-end">
@@ -574,50 +532,138 @@ function modalConfirmarBorrar(){
   </div></div>`;
 }
 
+// ── VISTA DIRECTIVO ──────────────────────────────────
+function vistaDirectivo(){
+  const g=STATE.dirGrado,s=STATE.dirSeccion;
+  const secId=`${g}${s}`;
+  const ests=STATE.allData[secId]||[];
+  const especiales=ests.filter(e=>e.marca);
+  const regulares=ests.filter(e=>!e.marca);
+
+  return`${header("Vista Directivo · José María Paz","Trayectorias Cuidadas · Aprendizajes Significativos")}
+  <div style="padding:24px;max-width:1400px;margin:0 auto">
+    ${leyenda()}
+    <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:flex-end">
+      <div><div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:4px;text-transform:uppercase">Grado</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${GRADOS.map(gr=>`<button onclick="setState({dirGrado:'${gr}'})" style="padding:7px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${g===gr?"#be185d":"#e2e8f0"};background:${g===gr?"#be185d":"#fff"};color:${g===gr?"#fff":"#475569"}">${gr}</button>`).join("")}
+        </div>
+      </div>
+      <div><div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:4px;text-transform:uppercase">Sección</div>
+        <div style="display:flex;gap:6px">
+          ${SECCIONES.map(sc=>`<button onclick="setState({dirSeccion:'${sc}'})" style="padding:7px 16px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${s===sc?"#881337":"#e2e8f0"};background:${s===sc?"#881337":"#fff"};color:${s===sc?"#fff":"#475569"}">Sección ${sc}</button>`).join("")}
+        </div>
+      </div>
+      ${selectorCorte()}
+    </div>
+
+    <!-- Resumen sección -->
+    <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+        <div style="font-family:'Playfair Display',serif;font-size:18px;color:#1e293b">${g} Sección ${s}</div>
+        <div style="display:flex;gap:10px">
+          <span style="background:#f0f9ff;color:#0369a1;border-radius:8px;padding:4px 12px;font-size:12px;font-weight:700">👥 ${ests.length} total</span>
+          <span style="background:#fdf4ff;color:#a21caf;border-radius:8px;padding:4px 12px;font-size:12px;font-weight:700">♿ ${especiales.length} con adaptaciones</span>
+        </div>
+      </div>
+      ${STATE.loading?loader():ests.length===0?`<div style="text-align:center;padding:32px;color:#94a3b8;border:2px dashed #fda4af;border-radius:12px">Sin datos</div>`:`
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+        <div style="flex:1;min-width:200px;background:#fff7f7;border:1px solid #fda4af44;border-radius:12px;padding:14px">
+          <div style="font-size:11px;font-weight:700;color:#be185d;margin-bottom:8px">📚 LENGUA · Semáforo</div>
+          ${semaforo(regulares,"lengua",g)}
+        </div>
+        <div style="flex:1;min-width:200px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:14px">
+          <div style="font-size:11px;font-weight:700;color:#0369a1;margin-bottom:8px">🔢 MATEMÁTICA · Semáforo</div>
+          ${semaforo(regulares,"matematica",g)}
+        </div>
+        ${especiales.length>0?`<div style="flex:1;min-width:200px;background:#fdf4ff;border:1px solid #f0abfc;border-radius:12px;padding:14px">
+          <div style="font-size:11px;font-weight:700;color:#a21caf;margin-bottom:8px">♿ Con adaptaciones</div>
+          ${especiales.map(e=>`<div style="font-size:12px;font-weight:600;color:#1e293b;margin-bottom:4px">${e.apellido}, ${e.nombre} ${badgeMarca(e.marca)}</div>`).join("")}
+        </div>`:""}
+      </div>`}
+    </div>
+
+    <!-- Resumen todas las secciones -->
+    <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:#1e293b;margin-bottom:16px">📊 ${g} Grado · Todas las secciones</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+        ${SECCIONES.map(sc=>{
+          const sid=`${g}${sc}`;
+          const total=(STATE.allData[sid]||[]).length;
+          const esp=(STATE.allData[sid]||[]).filter(e=>e.marca).length;
+          return`<div style="background:#fff7f7;border-radius:12px;padding:16px;border:1.5px solid #fda4af44;cursor:pointer" onclick="setState({dirSeccion:'${sc}'})">
+            <div style="font-weight:700;font-size:15px;color:#1e293b;margin-bottom:8px">${g} Sección ${sc}</div>
+            <div style="font-size:24px;font-weight:900;color:${total>0?"#be185d":"#cbd5e1"}">${total} <span style="font-size:12px;font-weight:400;color:#94a3b8">estudiantes</span></div>
+            ${esp>0?`<div style="font-size:12px;color:#a21caf;font-weight:700;margin-top:4px">♿ ${esp} con adaptaciones</div>`:""}
+            <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px">
+              <div style="font-size:10px;font-weight:700;color:#be185d">📚 Lengua</div>
+              ${semaforo((STATE.allData[sid]||[]).filter(e=>!e.marca),"lengua",g)}
+              <div style="font-size:10px;font-weight:700;color:#0369a1;margin-top:4px">🔢 Matemática</div>
+              ${semaforo((STATE.allData[sid]||[]).filter(e=>!e.marca),"matematica",g)}
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>
+  </div>`;
+}
+
 // ── IMPRIMIR ─────────────────────────────────────────
 function imprimirFicha(){
   const sec=STATE.seccion;
-  const ests=(STATE.allData[sec.id]||[]).sort((a,b)=>a.apellido.localeCompare(b.apellido));
-  if(!ests.length){alert("No hay estudiantes cargados.");return;}
+  let ests=(STATE.allData[sec.id]||[]).sort((a,b)=>a.apellido.localeCompare(b.apellido));
+  if(STATE.filtroMarca==="especiales")ests=ests.filter(e=>e.marca);
+  else if(STATE.filtroMarca==="regulares")ests=ests.filter(e=>!e.marca);
+  if(!ests.length){alert("No hay estudiantes.");return;}
   const g=sec.grado;
   const iL=INDS.lengua[g]||[],iM=INDS.matematica[g]||[];
   const cL=v=>v==="Consolidado"?"#16a34a":v==="En proceso"?"#d97706":v==="Incipiente"?"#dc2626":"#94a3b8";
-  const cN=v=>{const m={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasilábica":"#d97706","Alfabética":"#16a34a"};return m[v]||"#475569";};
+  const cA=v=>v==="Logrado"?"#16a34a":v==="En proceso"?"#d97706":v==="Requiere acompañamiento"?"#a21caf":"#94a3b8";
+  const cN=v=>{const m={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasialfabética":"#d97706","Alfabética":"#16a34a"};return m[v]||"#475569";};
   const win=window.open("","_blank");
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Fichas · ${sec.label}</title>
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>body{font-family:'Source Sans 3',sans-serif;padding:20px;max-width:800px;margin:0 auto}@media print{@page{margin:1cm}}</style>
   </head><body>
-  <div style="text-align:center;margin-bottom:20px;border-bottom:2px solid #1e293b;padding-bottom:14px">
+  <div style="text-align:center;margin-bottom:20px;border-bottom:2px solid #be185d;padding-bottom:14px">
     <div style="font-size:10px;color:#94a3b8;letter-spacing:2px;text-transform:uppercase">Escuela José María Paz · ${sec.label}</div>
-    <div style="font-size:22px;font-weight:900;color:#1e293b">Trayectorias Cuidadas · Aprendizajes Significativos</div>
+    <div style="font-size:22px;font-weight:900;color:#be185d">Trayectorias Cuidadas · Aprendizajes Significativos</div>
     <div style="font-size:13px;color:#475569">Directora: María de Fátima Díaz · Docente Facilitadora M+M: Gabriela Pafume</div>
     <div style="font-size:12px;color:#94a3b8">Cortes: Mayo · Agosto · Diciembre · Año ${new Date().getFullYear()}</div>
   </div>
-  ${ests.map(e=>`<div style="border:1.5px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:14px;page-break-inside:avoid">
-    <div style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom:1px solid #e2e8f0;padding-bottom:8px">
-      <div><b style="font-size:15px">${e.apellido}, ${e.nombre}</b><br/><span style="font-size:12px;color:#64748b">${sec.label} · José María Paz</span></div>
-    </div>
-    ${["1°","2°","3°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#7c3aed">✍️ NIVEL DE ESCRITURA</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${cN(e["escritura_"+c])}">${e["escritura_"+c]||"—"}</span></span>`).join("")}</div>`:""}
-    ${["1°","2°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#db2877">📖 NIVEL DE LECTURA</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${cN(e["lectura12_"+c])}">${e["lectura12_"+c]||"—"}</span></span>`).join("")}</div>`:""}
-    ${["3°","4°","5°","6°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#0ea5e9">📖 FLUIDEZ LECTORA</b><br/>${["Velocidad","Precisión","Prosodia"].map(dim=>`<div style="font-size:11px"><b>${dim}:</b> ${CORTES.map(c=>`<span style="margin-right:10px"><b>${c}:</b> <span style="color:${cL(e["fluidez_"+dim+"_"+c])}">${e["fluidez_"+dim+"_"+c]||"—"}</span></span>`).join("")}</div>`).join("")}</div>`:""}
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-      <div><b style="font-size:11px;color:#4338ca">📚 LENGUA</b>${iL.map(ind=>`<div style="font-size:10px;color:#475569;margin-top:3px">${ind}: <b style="color:${cL(e.indicadores?.["lengua_"+g+"_"+ind])}">${e.indicadores?.["lengua_"+g+"_"+ind]||"—"}</b></div>`).join("")}</div>
-      <div><b style="font-size:11px;color:#0369a1">🔢 MATEMÁTICA</b>${iM.map(ind=>`<div style="font-size:10px;color:#475569;margin-top:3px">${ind}: <b style="color:${cL(e.indicadores?.["matematica_"+g+"_"+ind])}">${e.indicadores?.["matematica_"+g+"_"+ind]||"—"}</b></div>`).join("")}</div>
-    </div>
-    ${e.observaciones?`<div style="margin-top:8px;font-size:11px;color:#64748b;font-style:italic;border-top:1px solid #e2e8f0;padding-top:6px">📝 ${e.observaciones}</div>`:""}
-  </div>`).join("")}
+  ${ests.map(e=>{
+    const esEsp=!!e.marca;
+    return`<div style="border:1.5px solid ${esEsp?"#f0abfc":"#fda4af"};border-radius:10px;padding:16px;margin-bottom:14px;page-break-inside:avoid;background:${esEsp?"#fdf4ff":"#fff"}">
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;border-bottom:1px solid ${esEsp?"#f0abfc":"#fda4af"};padding-bottom:8px">
+        <div><b style="font-size:15px">${e.apellido}, ${e.nombre}</b>${esEsp?` <span style="background:#a21caf18;color:#a21caf;border:1px solid #a21caf44;border-radius:20px;padding:1px 8px;font-size:10px;font-weight:800">♿ ${e.marca}</span>`:""}<br/><span style="font-size:12px;color:#64748b">${sec.label} · José María Paz</span></div>
+      </div>
+      ${esEsp?`
+        <div style="margin-bottom:10px"><b style="font-size:11px;color:#7c3aed">✍️ NIVEL DE ESCRITURA (ADAPTADO)</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${cN(e["nivel_escritura_adapt_"+c])}">${e["nivel_escritura_adapt_"+c]||"—"}</span></span>`).join("")}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div><b style="font-size:11px;color:#4338ca">📚 LENGUA ADAPTADA</b>${INDS_ADAPT.lengua.map(ind=>`<div style="font-size:10px;margin-top:3px">${ind}: <b style="color:${cA(e.indicadores_adapt?.["lengua_"+ind])}">${e.indicadores_adapt?.["lengua_"+ind]||"—"}</b></div>`).join("")}</div>
+          <div><b style="font-size:11px;color:#0369a1">🔢 MATEMÁTICA ADAPTADA</b>${INDS_ADAPT.matematica.map(ind=>`<div style="font-size:10px;margin-top:3px">${ind}: <b style="color:${cA(e.indicadores_adapt?.["matematica_"+ind])}">${e.indicadores_adapt?.["matematica_"+ind]||"—"}</b></div>`).join("")}</div>
+        </div>`:`
+        ${["1°","2°","3°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#7c3aed">✍️ NIVEL DE ESCRITURA</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${cN(e["escritura_"+c])}">${e["escritura_"+c]||"—"}</span></span>`).join("")}</div>`:""}
+        ${["1°","2°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#db2877">📖 NIVEL DE LECTURA</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${cN(e["lectura12_"+c])}">${e["lectura12_"+c]||"—"}</span></span>`).join("")}</div>`:""}
+        ${["3°","4°","5°","6°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#0ea5e9">📖 FLUIDEZ</b><br/>${["Velocidad","Precisión","Prosodia"].map(dim=>`<div style="font-size:11px"><b>${dim}:</b> ${CORTES.map(c=>`<span style="margin-right:10px"><b>${c}:</b> <span style="color:${cL(e["fluidez_"+dim+"_"+c])}">${e["fluidez_"+dim+"_"+c]||"—"}</span></span>`).join("")}</div>`).join("")}</div>`:""}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div><b style="font-size:11px;color:#4338ca">📚 LENGUA</b>${iL.map(ind=>`<div style="font-size:10px;margin-top:3px">${ind}: <b style="color:${cL(e.indicadores?.["lengua_"+g+"_"+ind])}">${e.indicadores?.["lengua_"+g+"_"+ind]||"—"}</b></div>`).join("")}</div>
+          <div><b style="font-size:11px;color:#0369a1">🔢 MATEMÁTICA</b>${iM.map(ind=>`<div style="font-size:10px;margin-top:3px">${ind}: <b style="color:${cL(e.indicadores?.["matematica_"+g+"_"+ind])}">${e.indicadores?.["matematica_"+g+"_"+ind]||"—"}</b></div>`).join("")}</div>
+        </div>`}
+      ${e.trayectoria?`<div style="margin-top:10px;font-size:11px;color:#64748b;font-style:italic;border-top:1px solid #fda4af44;padding-top:6px">📝 ${e.trayectoria}</div>`:""}
+    </div>`;
+  }).join("")}
   </body></html>`);
   win.document.close();
   setTimeout(()=>win.print(),600);
 }
 
 // ── ACCIONES ─────────────────────────────────────────
-async function selSeccion(id){
-  const sec=SECCIONES_LIST.find(s=>s.id===id);
-  setState({modo:"seccion",seccion:sec,tab:"carga",loading:true,busqEst:""});
-  const data=await dbGet(`sec-${id}`);
-  setState({allData:{...STATE.allData,[id]:data?JSON.parse(data):[]},loading:false});
+async function selSeccion(secId){
+  const sec=SECCIONES_LIST.find(s=>s.id===secId);
+  setState({seccion:sec,tab:"carga",loading:true,busqEst:"",modo:"seccion",filtroMarca:"todos"});
+  const data=await dbGet(`sec-${secId}`);
+  setState({allData:{...STATE.allData,[secId]:data?JSON.parse(data):[]},loading:false});
 }
 async function irDirectivo(){
   setState({modo:"directivo",loading:true});
@@ -632,6 +678,13 @@ function cerrarModal(){setState({modal:null});}
 function confirmarBorrar(est){setState({del:est});}
 function updateInd(key,val){if(STATE.modal)STATE.modal.est.indicadores={...(STATE.modal.est.indicadores||{}),[key]:val};}
 function updateExtra(key,val){if(STATE.modal)STATE.modal.est={...STATE.modal.est,[key]:val};}
+function updateAdapt(key,val){if(STATE.modal)STATE.modal.est.indicadores_adapt={...(STATE.modal.est.indicadores_adapt||{}),[key]:val};}
+function toggleMarca(marca){
+  if(STATE.modal){
+    STATE.modal.est={...STATE.modal.est,marca};
+    render();
+  }
+}
 
 async function guardarEstudiante(){
   const m=STATE.modal;
@@ -642,8 +695,10 @@ async function guardarEstudiante(){
   document.querySelectorAll("[data-ind]").forEach(s=>{if(s.value)indicadores[s.dataset.ind]=s.value;});
   const extras={};
   document.querySelectorAll("[data-key]").forEach(s=>{if(s.value)extras[s.dataset.key]=s.value;});
-  const observaciones=document.getElementById("m-obs")?.value.trim()||"";
-  const est={...(m.est||{}),...extras,apellido,nombre,grado:STATE.seccion.grado,seccion:STATE.seccion.seccion,observaciones,indicadores,id:m.est?.id||Date.now()};
+  const indicadores_adapt={...(m.est?.indicadores_adapt||{})};
+  document.querySelectorAll("[data-adapt]").forEach(s=>{if(s.value)indicadores_adapt[s.dataset.adapt]=s.value;});
+  const trayectoria=document.getElementById("m-trayectoria")?.value.trim()||"";
+  const est={...(m.est||{}),...extras,apellido,nombre,grado:STATE.seccion.grado,seccion:STATE.seccion.seccion,trayectoria,indicadores,indicadores_adapt,id:m.est?.id||Date.now()};
   const secId=STATE.seccion.id,prev=STATE.allData[secId]||[];
   const upd=m.mode==="new"?[...prev,est]:prev.map(e=>e.id===est.id?est:e);
   setState({modal:null,allData:{...STATE.allData,[secId]:upd}});
