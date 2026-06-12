@@ -92,7 +92,6 @@ const INDS={
   }
 };
 
-// Ajustes Razonables — Indicadores
 const INDS_AJUSTE={
   lengua:{
     "Act. 1 · Buscamos nuestro nombre":[
@@ -141,6 +140,11 @@ const INDS_AJUSTE={
     ],
   }
 };
+
+// ── ESTADO CENTRAL ────────────────────────────────────
+// modalEst guarda el estudiante que se está editando EN TIEMPO REAL
+// separado del STATE para no perder datos al hacer render
+let modalEst = null;
 
 let STATE={
   modo:"inicio",seccion:null,
@@ -211,36 +215,27 @@ function vistaInicio(){
   return`<div style="min-height:100vh;background:linear-gradient(160deg,#fff1f2 0%,#fda4af 45%,#fb7185 75%,#f43f5e 100%);display:flex;align-items:center;justify-content:center;padding:24px">
     <div style="width:100%;max-width:600px">
       <div style="text-align:center;margin-bottom:28px">
-
-        <!-- Escudo -->
         <div style="margin-bottom:16px">
           <img src="${ESCUDO}" alt="Escudo Escuela José María Paz" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 4px 20px #f43f5e44"/>
         </div>
-
         <div style="display:inline-block;background:#ffffff30;border-radius:12px;padding:8px 20px;margin-bottom:12px;border:1px solid #ffffff40">
           <span style="color:#881337;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase">Escuela José María Paz · Alta Gracia · Córdoba</span>
         </div>
         <h1 style="font-family:'Playfair Display',serif;color:#fff;font-size:34px;margin:0 0 2px;line-height:1.1;text-shadow:0 2px 8px #f43f5e44">Trayectorias Cuidadas</h1>
         <div style="color:#fff;font-weight:700;font-size:17px;margin-bottom:12px">Aprendizajes Significativos</div>
-
-        <!-- Directora -->
         <div style="background:#ffffff25;border-radius:14px;padding:14px 20px;margin-bottom:8px;border:1px solid #ffffff30">
           <div style="font-size:10px;color:#881337;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Directora</div>
           <div style="font-family:'Playfair Display',serif;color:#fff;font-size:22px;font-weight:700;text-shadow:0 2px 6px #f43f5e33">María de Fátima Díaz</div>
         </div>
-
-        <!-- Gabriela Pafume -->
         <div style="background:#ffffff18;border-radius:12px;padding:10px 18px;margin-bottom:12px;border:1px solid #ffffff25">
           <div style="font-size:10px;color:#881337;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px">Doc. Facilitadora M+M</div>
-          <div style="font-family:'Playfair Display',serif;color:#fff;font-size:22px;font-weight:700;text-shadow:0 2px 6px #f43f5e33">Gabriela Pafume</div>
+          <div style="font-family:'Playfair Display',serif;color:#fff;font-size:16px;font-weight:700">Gabriela Pafume</div>
         </div>
-
         <p style="color:#881337;font-size:13px;margin:0 0 10px">Lengua y Matemática · 1° a 6° · Secciones A · B · C<br/>Cortes: Mayo · Agosto · Diciembre</p>
         <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap">
           ${MARCAS.map(m=>`<span style="background:#ffffff25;border:1px solid #ffffff40;border-radius:20px;padding:3px 12px;font-size:11px;color:#fff;font-weight:700">♿ ${m}</span>`).join("")}
         </div>
       </div>
-
       <div style="background:#ffffff20;border:1px solid #ffffff30;border-radius:18px;padding:20px;margin-bottom:12px">
         <div style="font-weight:700;color:#fff;font-size:15px;margin-bottom:4px">📚 Acceso Docente por Sección</div>
         <p style="color:#881337;font-size:13px;margin-bottom:14px">Seleccioná tu grado y sección</p>
@@ -257,7 +252,6 @@ function vistaInicio(){
             </div>`).join("")}
         </div>
       </div>
-
       <button onclick="irDirectivo()" style="width:100%;background:#881337;color:#fff;border:none;border-radius:14px;padding:18px 24px;font-weight:700;font-size:16px;cursor:pointer;font-family:'Source Sans 3',sans-serif;box-shadow:0 4px 20px #f43f5e44">
         🏫 Vista Directivo · Toda la Escuela
       </button>
@@ -386,8 +380,8 @@ function vistaTabla(){
 }
 
 function modalEstudiante(){
-  const m=STATE.modal;
-  const e=m.est||{apellido:"",nombre:"",marca:"",indicadores:{},indicadores_ajuste:{},trayectoria:""};
+  const e = modalEst;
+  if(!e) return "";
   const g=STATE.seccion.grado;
   const esEsp=!!e.marca;
 
@@ -396,46 +390,40 @@ function modalEstudiante(){
     return`<div style="background:#fdf4ff;border:2px solid #f0abfc;border-radius:14px;padding:18px;margin-bottom:18px">
       <div style="font-weight:700;color:#a21caf;font-size:14px;margin-bottom:4px">♿ Ajustes Razonables · ${e.marca}</div>
       <div style="font-size:11px;color:#7c3aed;margin-bottom:16px;font-style:italic">Resolución 311/16 · Consejo Federal de Educación</div>
-
-      <!-- Nivel escritura -->
       <div style="margin-bottom:16px">
         <div style="font-weight:700;color:#7c3aed;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #7c3aed">✍️ Nivel de Escritura</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
           ${CORTES.map(c=>{const v=e[`nivel_escritura_ajuste_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
             <div style="font-size:11px;color:#7c3aed;margin-bottom:5px;font-weight:700">📅 ${c}</div>
-            <select data-key="nivel_escritura_ajuste_${c}" onchange="updateExtra('nivel_escritura_ajuste_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #7c3aed44;background:#f5f3ff;color:#7c3aed;width:auto">
+            <select onchange="updateExtra('nivel_escritura_ajuste_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #7c3aed44;background:#f5f3ff;color:#7c3aed;width:auto">
               <option value="">— nivel —</option>${NIV_ESCRITURA.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
             </select></div>`;}).join("")}
         </div>
       </div>
-
-      <!-- Indicadores Lengua -->
       ${Object.entries(INDS_AJUSTE.lengua).map(([act,inds])=>`
         <div style="margin-bottom:14px">
           <div style="font-weight:700;color:#4338ca;font-size:12px;margin-bottom:8px;padding-left:8px;border-left:3px solid #4338ca">📚 ${act}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
             ${inds.map(ind=>{const k=`lengua_${act}_${ind}`,v=e.indicadores_ajuste?.[k]||"";
-              const bg=v?{Logrado:"#f0fdf4","En proceso":"#fffbeb","Requiere acompañamiento":"#fdf4ff"}[v]:"#f8fafc";
-              const fg=v?{Logrado:"#16a34a","En proceso":"#d97706","Requiere acompañamiento":"#a21caf"}[v]:"#94a3b8";
+              const bg=v?{Logrado:"#f0fdf4","En proceso":"#fffbeb","Requiere acompañamiento":"#fdf4ff"}[v]||"#f8fafc":"#f8fafc";
+              const fg=v?{Logrado:"#16a34a","En proceso":"#d97706","Requiere acompañamiento":"#a21caf"}[v]||"#94a3b8":"#94a3b8";
               return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
                 <div style="font-size:11px;color:#475569;margin-bottom:5px;font-weight:600">${ind}</div>
-                <select data-ajuste="${k}" onchange="updateAjuste('${k}',this.value)" style="background:${bg};color:${fg};border:1.5px solid ${fg}44;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:auto">
+                <select onchange="updateAjuste('${k}',this.value)" style="background:${bg};color:${fg};border:1.5px solid ${fg}44;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:auto">
                   <option value="">— logro —</option>${LOGRO_AJUSTE.map(l=>`<option value="${l}" ${v===l?"selected":""}>${l}</option>`).join("")}
                 </select></div>`;}).join("")}
           </div>
         </div>`).join("")}
-
-      <!-- Indicadores Matemática -->
       ${Object.entries(INDS_AJUSTE.matematica).map(([act,inds])=>`
         <div style="margin-bottom:14px">
           <div style="font-weight:700;color:#0369a1;font-size:12px;margin-bottom:8px;padding-left:8px;border-left:3px solid #0369a1">🔢 ${act}</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
             ${inds.map(ind=>{const k=`matematica_${act}_${ind}`,v=e.indicadores_ajuste?.[k]||"";
-              const bg=v?{Logrado:"#f0fdf4","En proceso":"#fffbeb","Requiere acompañamiento":"#fdf4ff"}[v]:"#f8fafc";
-              const fg=v?{Logrado:"#16a34a","En proceso":"#d97706","Requiere acompañamiento":"#a21caf"}[v]:"#94a3b8";
+              const bg=v?{Logrado:"#f0fdf4","En proceso":"#fffbeb","Requiere acompañamiento":"#fdf4ff"}[v]||"#f8fafc":"#f8fafc";
+              const fg=v?{Logrado:"#16a34a","En proceso":"#d97706","Requiere acompañamiento":"#a21caf"}[v]||"#94a3b8":"#94a3b8";
               return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
                 <div style="font-size:11px;color:#475569;margin-bottom:5px;font-weight:600">${ind}</div>
-                <select data-ajuste="${k}" onchange="updateAjuste('${k}',this.value)" style="background:${bg};color:${fg};border:1.5px solid ${fg}44;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:auto">
+                <select onchange="updateAjuste('${k}',this.value)" style="background:${bg};color:${fg};border:1.5px solid ${fg}44;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:auto">
                   <option value="">— logro —</option>${LOGRO_AJUSTE.map(l=>`<option value="${l}" ${v===l?"selected":""}>${l}</option>`).join("")}
                 </select></div>`;}).join("")}
           </div>
@@ -452,7 +440,7 @@ function modalEstudiante(){
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
           ${CORTES.map(c=>{const v=e[`escritura_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
             <div style="font-size:11px;color:#7c3aed;margin-bottom:5px;font-weight:700">📅 ${c}</div>
-            <select data-key="escritura_${c}" onchange="updateExtra('escritura_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #7c3aed44;background:#f5f3ff;color:#7c3aed;width:auto">
+            <select onchange="updateExtra('escritura_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #7c3aed44;background:#f5f3ff;color:#7c3aed;width:auto">
               <option value="">— nivel —</option>${NIV_ESCRITURA.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
             </select></div>`;}).join("")}
         </div></div>`;
@@ -464,7 +452,7 @@ function modalEstudiante(){
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
           ${CORTES.map(c=>{const v=e[`lectura12_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
             <div style="font-size:11px;color:#db2877;margin-bottom:5px;font-weight:700">📅 ${c}</div>
-            <select data-key="lectura12_${c}" onchange="updateExtra('lectura12_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #db287744;background:#fdf2f8;color:#db2877;width:auto">
+            <select onchange="updateExtra('lectura12_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #db287744;background:#fdf2f8;color:#db2877;width:auto">
               <option value="">— nivel —</option>${NIV_LECTURA_12.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
             </select></div>`;}).join("")}
         </div></div>`;
@@ -478,7 +466,7 @@ function modalEstudiante(){
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
             ${CORTES.map(c=>{const k=`fluidez_${dim}_${c}`;const v=e[k]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
               <div style="font-size:11px;color:#0ea5e9;margin-bottom:5px;font-weight:700">📅 ${c}</div>
-              <select data-key="${k}" onchange="updateExtra('${k}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #0ea5e944;background:#f0f9ff;color:#0ea5e9;width:auto">
+              <select onchange="updateExtra('${k}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #0ea5e944;background:#f0f9ff;color:#0ea5e9;width:auto">
                 <option value="">— logro —</option>${LOGRO.map(l=>`<option ${v===l?"selected":""}>${l}</option>`).join("")}
               </select></div>`;}).join("")}
           </div></div>`).join("")}
@@ -491,11 +479,11 @@ function modalEstudiante(){
         <div style="font-weight:700;color:${color};font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid ${color}">${emoji} ${area==="lengua"?"Lengua":"Matemática"}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           ${inds.map(ind=>{const k=`${area}_${g}_${ind}`,v=e.indicadores?.[k]||"";
-            const bg=v?{Consolidado:"#f0fdf4","En proceso":"#fffbeb",Incipiente:"#fef2f2"}[v]:"#f8fafc";
-            const fg=v?{Consolidado:"#16a34a","En proceso":"#d97706",Incipiente:"#dc2626"}[v]:"#94a3b8";
+            const bg=v?{Consolidado:"#f0fdf4","En proceso":"#fffbeb",Incipiente:"#fef2f2"}[v]||"#f8fafc":"#f8fafc";
+            const fg=v?{Consolidado:"#16a34a","En proceso":"#d97706",Incipiente:"#dc2626"}[v]||"#94a3b8":"#94a3b8";
             return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
               <div style="font-size:11px;color:#475569;margin-bottom:5px;font-weight:600">${ind}</div>
-              <select data-ind="${k}" onchange="updateInd('${k}',this.value)" style="background:${bg};color:${fg};border:1.5px solid ${fg}44;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:auto">
+              <select onchange="updateInd('${k}',this.value)" style="background:${bg};color:${fg};border:1.5px solid ${fg}44;border-radius:8px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:auto">
                 <option value="">— seleccionar —</option>${LOGRO.map(l=>`<option value="${l}" ${v===l?"selected":""}>${l}</option>`).join("")}
               </select></div>`;}).join("")}
         </div></div>`;
@@ -503,17 +491,18 @@ function modalEstudiante(){
     return bEscritura()+bLectura()+bFluidez()+bInds("lengua","#6366f1","📚")+bInds("matematica","#0ea5e9","🔢");
   };
 
+  const modeLabel = STATE.modal?.mode === "new" ? "Nuevo" : "Editar";
   return`<div class="modal-overlay" onclick="if(event.target===this)cerrarModal()">
     <div class="modal-box">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <h3 style="font-family:'Playfair Display',serif;margin:0;font-size:18px;color:#1e293b">${m.mode==="new"?"Nuevo":"Editar"} estudiante · ${STATE.seccion.label}</h3>
+        <h3 style="font-family:'Playfair Display',serif;margin:0;font-size:18px;color:#1e293b">${modeLabel} estudiante · ${STATE.seccion.label}</h3>
         <button onclick="cerrarModal()" style="background:none;border:none;font-size:26px;cursor:pointer;color:#94a3b8">×</button>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
         <div><label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Apellido</label>
-          <input id="m-apellido" value="${e.apellido}" placeholder="Apellido"/></div>
+          <input id="m-apellido" value="${e.apellido||''}" placeholder="Apellido" oninput="modalEst.apellido=this.value"/></div>
         <div><label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">Nombre</label>
-          <input id="m-nombre" value="${e.nombre}" placeholder="Nombre"/></div>
+          <input id="m-nombre" value="${e.nombre||''}" placeholder="Nombre" oninput="modalEst.nombre=this.value"/></div>
       </div>
       <div style="background:#fdf4ff;border:1.5px solid #f0abfc;border-radius:12px;padding:14px;margin-bottom:18px">
         <div style="font-size:12px;font-weight:700;color:#a21caf;margin-bottom:10px">♿ ¿Tiene ajustes razonables? (Res. 311/16 CFE)</div>
@@ -527,11 +516,11 @@ function modalEstudiante(){
       ${bloqueGeneral()}
       <div style="margin-top:14px">
         <label style="display:block;font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;text-transform:uppercase">📝 Trayectoria / Observaciones</label>
-        <textarea id="m-trayectoria" rows="3" placeholder="Redactá la trayectoria del estudiante, avances, contexto, intervenciones...">${e.trayectoria||""}</textarea>
+        <textarea id="m-trayectoria" rows="3" placeholder="Redactá la trayectoria del estudiante, avances, contexto, intervenciones..." oninput="modalEst.trayectoria=this.value">${e.trayectoria||""}</textarea>
       </div>
       <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:20px">
         <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
-        <button class="btn-primary" onclick="guardarEstudiante()">Guardar</button>
+        <button class="btn-primary" onclick="guardarEstudiante()">💾 Guardar</button>
       </div>
     </div>
   </div>`;
@@ -620,7 +609,7 @@ function vistaDirectivo(){
   </div>`;
 }
 
-// ── IMPRIMIR SECCIÓN ─────────────────────────────────
+// ── IMPRIMIR ──────────────────────────────────────────
 function imprimirSeccion(){
   const sec=STATE.seccion;
   let ests=(STATE.allData[sec.id]||[]).sort((a,b)=>a.apellido.localeCompare(b.apellido));
@@ -629,11 +618,7 @@ function imprimirSeccion(){
   if(!ests.length){alert("No hay estudiantes.");return;}
   generarPDF(ests,sec);
 }
-
-// ── DESCARGAR FICHA INDIVIDUAL ────────────────────────
-function descargarFicha(e){
-  generarPDF([e],STATE.seccion);
-}
+function descargarFicha(e){generarPDF([e],STATE.seccion);}
 
 function generarPDF(ests,sec){
   const g=sec.grado;
@@ -714,35 +699,81 @@ async function irDirectivo(){
   setState({allData:o,loading:false});
 }
 function irInicio(){setState({modo:"inicio",seccion:null,busq:""});}
-function abrirModal(){setState({modal:{mode:"new",est:null}});}
-function editarEst(est){setState({modal:{mode:"edit",est:JSON.parse(JSON.stringify(est))}});}
-function cerrarModal(){setState({modal:null});}
+
+function abrirModal(){
+  modalEst = {apellido:"",nombre:"",marca:"",indicadores:{},indicadores_ajuste:{},trayectoria:""};
+  setState({modal:{mode:"new"}});
+}
+function editarEst(est){
+  modalEst = JSON.parse(JSON.stringify(est));
+  setState({modal:{mode:"edit"}});
+}
+function cerrarModal(){
+  modalEst = null;
+  setState({modal:null});
+}
 function confirmarBorrar(est){setState({del:est});}
-function updateInd(key,val){if(STATE.modal)STATE.modal.est.indicadores={...(STATE.modal.est.indicadores||{}),[key]:val};}
-function updateExtra(key,val){if(STATE.modal)STATE.modal.est={...STATE.modal.est,[key]:val};}
-function updateAjuste(key,val){if(STATE.modal)STATE.modal.est.indicadores_ajuste={...(STATE.modal.est.indicadores_ajuste||{}),[key]:val};}
-function toggleMarca(marca){if(STATE.modal){STATE.modal.est={...STATE.modal.est,marca};render();}}
+
+// Actualizan modalEst directamente SIN hacer render (evita perder foco)
+function updateInd(key,val){
+  if(modalEst){
+    if(!modalEst.indicadores) modalEst.indicadores={};
+    modalEst.indicadores[key]=val;
+  }
+}
+function updateExtra(key,val){
+  if(modalEst) modalEst[key]=val;
+}
+function updateAjuste(key,val){
+  if(modalEst){
+    if(!modalEst.indicadores_ajuste) modalEst.indicadores_ajuste={};
+    modalEst.indicadores_ajuste[key]=val;
+  }
+}
+function toggleMarca(marca){
+  if(modalEst){
+    modalEst.marca=marca;
+    render(); // solo re-render al cambiar tipo (muestra/oculta bloque ajuste)
+  }
+}
 
 async function guardarEstudiante(){
-  const m=STATE.modal;
-  const apellido=document.getElementById("m-apellido")?.value.trim()||"";
-  const nombre=document.getElementById("m-nombre")?.value.trim()||"";
+  if(!modalEst){alert("Error: no hay datos en el modal.");return;}
+
+  // Leer apellido, nombre y trayectoria del DOM (campos de texto libre)
+  const apellido=(document.getElementById("m-apellido")?.value||"").trim();
+  const nombre=(document.getElementById("m-nombre")?.value||"").trim();
+  const trayectoria=(document.getElementById("m-trayectoria")?.value||"").trim();
+
   if(!apellido||!nombre){alert("Completá nombre y apellido.");return;}
-  const indicadores={...(m.est?.indicadores||{})};
-  document.querySelectorAll("[data-ind]").forEach(s=>{if(s.value)indicadores[s.dataset.ind]=s.value;});
-  const extras={};
-  document.querySelectorAll("[data-key]").forEach(s=>{if(s.value)extras[s.dataset.key]=s.value;});
-  const indicadores_ajuste={...(m.est?.indicadores_ajuste||{})};
-  document.querySelectorAll("[data-ajuste]").forEach(s=>{if(s.value)indicadores_ajuste[s.dataset.ajuste]=s.value;});
-  const trayectoria=document.getElementById("m-trayectoria")?.value.trim()||"";
-  const est={...(m.est||{}),...extras,apellido,nombre,grado:STATE.seccion.grado,seccion:STATE.seccion.seccion,trayectoria,indicadores,indicadores_ajuste,id:m.est?.id||Date.now()};
-  const secId=STATE.seccion.id,prev=STATE.allData[secId]||[];
-  const upd=m.mode==="new"?[...prev,est]:prev.map(e=>e.id===est.id?est:e);
-  setState({modal:null,allData:{...STATE.allData,[secId]:upd}});
-  await dbSet(`sec-${secId}`,JSON.stringify(upd));
+
+  // Construir el objeto final desde modalEst (ya tiene todos los selects)
+  const est={
+    ...modalEst,
+    apellido,
+    nombre,
+    trayectoria,
+    grado: STATE.seccion.grado,
+    seccion: STATE.seccion.seccion,
+    id: modalEst.id || Date.now()
+  };
+
+  const secId=STATE.seccion.id;
+  const prev=STATE.allData[secId]||[];
+  const upd=STATE.modal.mode==="new"
+    ? [...prev, est]
+    : prev.map(e=>e.id===est.id?est:e);
+
+  modalEst=null;
+  setState({modal:null, allData:{...STATE.allData,[secId]:upd}});
+
+  // Guardar en Firebase
+  await dbSet(`sec-${secId}`, JSON.stringify(upd));
 }
+
 async function borrarEstudiante(){
-  const secId=STATE.seccion.id,upd=(STATE.allData[secId]||[]).filter(e=>e.id!==STATE.del.id);
+  const secId=STATE.seccion.id;
+  const upd=(STATE.allData[secId]||[]).filter(e=>e.id!==STATE.del.id);
   setState({del:null,allData:{...STATE.allData,[secId]:upd}});
   await dbSet(`sec-${secId}`,JSON.stringify(upd));
 }
