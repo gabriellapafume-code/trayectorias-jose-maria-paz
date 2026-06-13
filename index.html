@@ -157,8 +157,6 @@ let STATE={
   filtroMarca:"todos",
 };
 function setState(p){Object.assign(STATE,typeof p==="function"?p(STATE):p);render();}
-async function dbGet(k){return window.dbGet?window.dbGet(k):null;}
-async function dbSet(k,v){if(window.dbSet)await window.dbSet(k,v);}
 
 function badge(v){
   if(!v)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
@@ -690,12 +688,12 @@ function generarPDF(ests,sec){
 async function selSeccion(secId){
   const sec=SECCIONES_LIST.find(s=>s.id===secId);
   setState({seccion:sec,tab:"carga",loading:true,busqEst:"",modo:"seccion",filtroMarca:"todos"});
-  const data=await dbGet(`sec-${secId}`);
+  const data=await window.dbGet(`sec-${secId}`);
   setState({allData:{...STATE.allData,[secId]:data?JSON.parse(data):[]},loading:false});
 }
 async function irDirectivo(){
   setState({modo:"directivo",loading:true});
-  const entries=await Promise.all(SECCIONES_LIST.map(s=>dbGet(`sec-${s.id}`).then(d=>[s.id,d?JSON.parse(d):[]])));
+  const entries=await Promise.all(SECCIONES_LIST.map(s=>window.dbGet(`sec-${s.id}`).then(d=>[s.id,d?JSON.parse(d):[]])));
   const o={};entries.forEach(([id,d])=>o[id]=d);
   setState({allData:o,loading:false});
 }
@@ -769,14 +767,14 @@ async function guardarEstudiante(){
   setState({modal:null, allData:{...STATE.allData,[secId]:upd}});
 
   // Guardar en Firebase
-  await dbSet(`sec-${secId}`, JSON.stringify(upd));
+  await window.dbSet(`sec-${secId}`, JSON.stringify(upd));
 }
 
 async function borrarEstudiante(){
   const secId=STATE.seccion.id;
   const upd=(STATE.allData[secId]||[]).filter(e=>e.id!==STATE.del.id);
   setState({del:null,allData:{...STATE.allData,[secId]:upd}});
-  await dbSet(`sec-${secId}`,JSON.stringify(upd));
+  await window.dbSet(`sec-${secId}`,JSON.stringify(upd));
 }
 
 function render(){
