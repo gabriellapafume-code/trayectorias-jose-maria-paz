@@ -6,9 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Trayectorias Cuidadas · José María Paz</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyDzBcWxsKUOdyuFUpJa5r8ZXfyERZHUW14",
   authDomain: "jose-maria-paz.firebaseapp.com",
@@ -17,14 +17,15 @@ const firebaseConfig = {
   messagingSenderId: "617808268570",
   appId: "1:617808268570:web:7338eb999a3cbdd812b0a3"
 };
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 window.dbGet = async (key) => {
-  try { const snap = await getDoc(doc(db,"mapeo",key)); return snap.exists()?snap.data().value:null; }
-  catch(e){ return null; }
+  try { const snap = await db.collection("mapeo").doc(key).get(); return snap.exists ? snap.data().value : null; }
+  catch(e){ console.error("dbGet error:", e); return null; }
 };
-window.dbSet = async (key,value) => {
-  try { await setDoc(doc(db,"mapeo",key),{value}); } catch(e){}
+window.dbSet = async (key, value) => {
+  try { await db.collection("mapeo").doc(key).set({value}); console.log("Guardado OK:", key); }
+  catch(e){ console.error("dbSet error:", e); }
 };
 window.firebaseReady = true;
 document.dispatchEvent(new Event("firebaseReady"));
