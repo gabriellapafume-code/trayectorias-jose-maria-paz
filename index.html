@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- TRAYECTORIAS CUIDADAS · Aprendizajes Significativos · José María Paz -->
+<!-- HUELLAS DE APRENDIZAJES EN MOVIMIENTO · José María Paz -->
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Trayectorias Cuidadas · José María Paz</title>
+<title>Huellas de Aprendizajes en Movimiento · José María Paz</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet"/>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -62,7 +62,7 @@ td{padding:7px 10px;border-bottom:1px solid #e2e8f0;vertical-align:middle}
 <script>
 const GRADOS=["1°","2°","3°","4°","5°","6°"];
 const SECCIONES=["A","B","C"];
-const CORTES=["Mayo","Agosto","Diciembre"];
+const CORTES=["Marzo","Agosto","Diciembre"];
 const LOGRO=["Consolidado","En proceso","Incipiente"];
 const LOGRO_AJUSTE=["Logrado","En proceso","Requiere acompañamiento"];
 const NIV_ESCRITURA=["Diferenciada","Silábica","Silábica alfabética","Cuasialfabética","Alfabética"];
@@ -147,7 +147,7 @@ let STATE={
   tab:"carga",allData:{},loading:false,
   busq:"",busqEst:"",
   modal:null,del:null,
-  corte:"Mayo",
+  corte:"Marzo",
   dirGrado:"1°",dirSeccion:"A",
   filtroMarca:"todos",
 };
@@ -220,7 +220,7 @@ function vistaInicio(){
         <div style="display:inline-block;background:#ffffff30;border-radius:12px;padding:8px 20px;margin-bottom:12px;border:1px solid #ffffff40">
           <span style="color:#881337;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase">Escuela José María Paz · Alta Gracia · Córdoba</span>
         </div>
-        <h1 style="font-family:'Playfair Display',serif;color:#fff;font-size:34px;margin:0 0 2px;line-height:1.1;text-shadow:0 2px 8px #f43f5e44">Trayectorias Cuidadas</h1>
+        <h1 style="font-family:'Playfair Display',serif;color:#fff;font-size:34px;margin:0 0 2px;line-height:1.1;text-shadow:0 2px 8px #f43f5e44">Huellas de Aprendizajes en Movimiento</h1>
         <div style="color:#fff;font-weight:700;font-size:17px;margin-bottom:12px">Aprendizajes Significativos</div>
 
         <!-- Directora -->
@@ -235,7 +235,7 @@ function vistaInicio(){
           <div style="font-family:'Playfair Display',serif;color:#fff;font-size:22px;font-weight:700;text-shadow:0 2px 6px #f43f5e33">Gabriela Pafume</div>
         </div>
 
-        <p style="color:#881337;font-size:13px;margin:0 0 10px">Lengua y Matemática · 1° a 6° · Secciones A · B · C<br/>Cortes: Mayo · Agosto · Diciembre</p>
+        <p style="color:#881337;font-size:13px;margin:0 0 10px">Lengua y Matemática · 1° a 6° · Secciones A · B · C<br/>Cortes: Marzo · Agosto · Diciembre</p>
         <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap">
           ${MARCAS.map(m=>`<span style="background:#ffffff25;border:1px solid #ffffff40;border-radius:20px;padding:3px 12px;font-size:11px;color:#fff;font-weight:700">♿ ${m}</span>`).join("")}
         </div>
@@ -555,7 +555,7 @@ function vistaDirectivo(){
   const ests=STATE.allData[secId]||[];
   const especiales=ests.filter(e=>e.marca);
   const regulares=ests.filter(e=>!e.marca);
-  return`${header("Vista Directivo · José María Paz","Trayectorias Cuidadas · Aprendizajes Significativos")}
+  return`${header("Vista Directivo · José María Paz","Huellas de Aprendizajes en Movimiento")}
   <div style="padding:24px;max-width:1400px;margin:0 auto">
     ${leyenda()}
     <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:flex-end">
@@ -650,9 +650,9 @@ function generarPDF(ests,sec){
     <img src="${ESCUDO}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;border:2px solid #fda4af"/>
     <div>
       <div style="font-size:10px;color:#94a3b8;letter-spacing:2px;text-transform:uppercase">Escuela José María Paz · Alta Gracia · ${sec.label}</div>
-      <div style="font-size:20px;font-weight:900;color:#be185d;font-family:'Playfair Display',serif">Trayectorias Cuidadas · Aprendizajes Significativos</div>
+      <div style="font-size:20px;font-weight:900;color:#be185d;font-family:'Playfair Display',serif">Huellas de Aprendizajes en Movimiento</div>
       <div style="font-size:12px;color:#475569">Directora: María de Fátima Díaz · Doc. Facilitadora M+M: Gabriela Pafume</div>
-      <div style="font-size:11px;color:#94a3b8">Cortes: Mayo · Agosto · Diciembre · Año ${new Date().getFullYear()}</div>
+      <div style="font-size:11px;color:#94a3b8">Cortes: Marzo · Agosto · Diciembre · Año ${new Date().getFullYear()}</div>
     </div>
   </div>
   ${ests.map(e=>{
