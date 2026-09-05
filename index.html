@@ -148,7 +148,7 @@ let STATE={
   busq:"",busqEst:"",
   modal:null,del:null,
   corte:"Marzo",
-  dirGrado:"1°",dirSeccion:"A",dirTab:"resumen",
+  dirGrado:"1°",dirSeccion:"A",dirTab:"resumen",nivelesSeccion:"todas",
   filtroMarca:"todos",
 };
 function setState(p){Object.assign(STATE,typeof p==="function"?p(STATE):p);render();}
@@ -303,6 +303,546 @@ function header(t,s){
   </div>`;
 }
 
+// ── IMPORTACIÓN DE INFORMES (cualquier grado 1° a 6°) ─
+// Para cargar un nuevo informe: agregar una entrada acá con la clave "GRADO°SECCION"
+// (ej: "1°A", "3°C", "6°B"). Cada estudiante es un objeto con apellido, nombre,
+// y los campos que correspondan (escritura_<Corte>, lectura12_<Corte>,
+// fluidez_<Dimensión>_<Corte>, marca, nivel_escritura_ajuste_<Corte>, trayectoria, etc.)
+const IMPORTS_PENDIENTES={
+  "1°A":{
+    titulo:"Compromiso Alfabetizador CB@ · 1°A",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Bringas", nombre:"Altamirano Isabella", escritura_Marzo:"Silábica"},
+      {apellido:"Báez", nombre:"Loyola Nehemías Jonathan", escritura_Marzo:"Diferenciada"},
+      {apellido:"Camara", nombre:"Aisa Ludmila", escritura_Marzo:"Silábica"},
+      {apellido:"Di", nombre:"Giacomo Julieta Victoria", escritura_Marzo:"Diferenciada"},
+      {apellido:"Fernandez", nombre:"Godoy Celeste Alexia", escritura_Marzo:"Silábica"},
+      {apellido:"Flores", nombre:"Jazmín", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Gamero", nombre:"Renata", escritura_Marzo:"Alfabética"},
+      {apellido:"Guevara", nombre:"Delfina", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Heredia", nombre:"Porto Luna Aimé", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Leiva", nombre:"Peralta Miqueas Ismael", escritura_Marzo:"Silábica"},
+      {apellido:"Lopez", nombre:"Zambrano Rodrigo Jesús", escritura_Marzo:"Silábica"},
+      {apellido:"Luna", nombre:"Lara Ailen", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Nievas", nombre:"Pía Nair", escritura_Marzo:"Silábica"},
+      {apellido:"Olmedo", nombre:"Bautista", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Olmedo", nombre:"Ciro Nicolás", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Olmedo", nombre:"Emily Catalina", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Oviedo", nombre:"Lautaro Demian", escritura_Marzo:"Diferenciada"},
+      {apellido:"Pereyra", nombre:"Lorenzo Ian", escritura_Marzo:"Silábica"},
+      {apellido:"Pereyra", nombre:"Thiago Joaquín", escritura_Marzo:"Silábica"},
+      {apellido:"Perez", nombre:"Nahira Abigail", escritura_Marzo:"Silábica"},
+      {apellido:"Perez", nombre:"Vera Isaac Ezequiel", escritura_Marzo:"Silábica"},
+      {apellido:"Porto", nombre:"Mayte Jazmin", escritura_Marzo:"Diferenciada"},
+      {apellido:"Racedo", nombre:"Gonzalo Martín", escritura_Marzo:"Silábica"},
+      {apellido:"Rivarola", nombre:"Delfina Fabiana", escritura_Marzo:"Silábica"},
+      {apellido:"Zabala", nombre:"Emilia", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Ávila", nombre:"Noah Misael", escritura_Marzo:"Cuasialfabética"},
+    ],
+  },
+  "1°B":{
+    titulo:"Compromiso Alfabetizador CB@ · 1°B",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Arguello", nombre:"Sosa Tomas Ezequiel", escritura_Marzo:"Diferenciada"},
+      {apellido:"Carrizo", nombre:"Ledesma Isabella Angelina", escritura_Marzo:"Silábica"},
+      {apellido:"De", nombre:"La Fuente Martina Catalina Ailin", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Demo", nombre:"Villar Thiago Simon", escritura_Marzo:"Silábica"},
+      {apellido:"Fernandez", nombre:"Nehemías Joaquin", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Freytes", nombre:"Catalina Aitana", escritura_Marzo:"Silábica"},
+      {apellido:"Gonzalez", nombre:"Galia Olivia", escritura_Marzo:"Silábica"},
+      {apellido:"Gonzalez", nombre:"Leguizamon Renzo Benjamin", escritura_Marzo:"Diferenciada"},
+      {apellido:"Icazatti", nombre:"Suarez Ashley Janeth", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Leiria", nombre:"Esteban", escritura_Marzo:"Silábica"},
+      {apellido:"Medina", nombre:"Arce Juliana", escritura_Marzo:"Silábica"},
+      {apellido:"Medina", nombre:"Arce Olivia", escritura_Marzo:"Silábica"},
+      {apellido:"Oviedo", nombre:"Mía Elena", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Oviedo", nombre:"Noah Ibrahim", escritura_Marzo:"Diferenciada"},
+      {apellido:"Peralta", nombre:"Simón", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Reynoso", nombre:"Leo Benjamin", escritura_Marzo:"Diferenciada"},
+      {apellido:"Rodriguez", nombre:"Maria Tiziana", escritura_Marzo:"Silábica"},
+      {apellido:"Sosa", nombre:"Josefina", escritura_Marzo:"Alfabética"},
+      {apellido:"Villarreal", nombre:"Luengo Antonella", escritura_Marzo:"Silábica"},
+    ],
+  },
+  "1°C":{
+    titulo:"Compromiso Alfabetizador CB@ · 1°C",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Ariza Arrigoni", nombre:"Malena Olivia", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Falcon", nombre:"Josefina", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Giovagnoli", nombre:"Anna Cielo", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Gramaglia Rugani", nombre:"Trinidad", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Heredia", nombre:"Margarita Milagros", escritura_Marzo:"Alfabética"},
+      {apellido:"Ibarra", nombre:"Juan Bautista", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Iriarte", nombre:"Alma Lola", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Iriarte", nombre:"Almendra", escritura_Marzo:"Silábica"},
+      {apellido:"López", nombre:"Franco Tomás", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Maldonado", nombre:"Lola Agustina", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Martinez", nombre:"Pedro José", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Palacios", nombre:"Barrera. Samira Eluney", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Reta Barroso", nombre:"Martín Román", escritura_Marzo:"Alfabética"},
+      {apellido:"Rubio Moran", nombre:"Alma Naiara", escritura_Marzo:"Diferenciada"},
+      {apellido:"Sosa", nombre:"Betany Deyanira", escritura_Marzo:"Diferenciada"},
+      {apellido:"Suarez", nombre:"Isabella Antonia", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Tejada", nombre:"Matilda Renata", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Vera", nombre:"Ambar", escritura_Marzo:"Silábica alfabética"},
+    ],
+  },
+  "2°A":{
+    titulo:"Compromiso Alfabetizador CB@ · 2°A",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Altamirano", nombre:"Eliseo Jeremias", escritura_Marzo:"Silábica"},
+      {apellido:"Blasi", nombre:"Vivas Emma Valentina", escritura_Marzo:"Alfabética"},
+      {apellido:"Bustos", nombre:"José Gabriel", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Bustos", nombre:"Matilda Lucia", marca:"CUD", nivel_escritura_ajuste_Marzo:"Silábica"},
+      {apellido:"Campani", nombre:"Santino", escritura_Marzo:"Alfabética"},
+      {apellido:"Cortes", nombre:"Lucas Lionel", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Cámara", nombre:"Emir Valentín", marca:"MEMO2", nivel_escritura_ajuste_Marzo:"Cuasialfabética"},
+      {apellido:"Fernandez", nombre:"Luna Jael", escritura_Marzo:"Silábica"},
+      {apellido:"Godoy", nombre:"Quiroga Valentín Natanael", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Gomez", nombre:"Alexander", marca:"MEMO2", nivel_escritura_ajuste_Marzo:"Diferenciada"},
+      {apellido:"Juarez", nombre:"Tiziana Belen", escritura_Marzo:"Silábica"},
+      {apellido:"Mansilla", nombre:"Lescano Gabriela Sahara", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Merlo", nombre:"Monsalvo Theo Leonel", marca:"MEMO2", nivel_escritura_ajuste_Marzo:"Alfabética"},
+      {apellido:"Notta", nombre:"Quiroga Sol Aytana", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Oviedo", nombre:"Selena", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Perez", nombre:"Victoria Jazmin", escritura_Marzo:"Alfabética"},
+      {apellido:"Pons", nombre:"Noah Rainer", escritura_Marzo:"Alfabética"},
+      {apellido:"Rodriguez", nombre:"Herrera Yazmín Nicol", escritura_Marzo:"Silábica"},
+      {apellido:"Sanabria", nombre:"Benjamin", escritura_Marzo:"Diferenciada"},
+      {apellido:"Sanabria", nombre:"Mora", escritura_Marzo:"Silábica"},
+      {apellido:"Unia", nombre:"Franchesca De Lourdes", escritura_Marzo:"Diferenciada"},
+    ],
+  },
+  "2°B":{
+    titulo:"Compromiso Alfabetizador CB@ · 2°B",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Basualdo", nombre:"Uriel Alan", marca:"CUD", nivel_escritura_ajuste_Marzo:"Diferenciada"},
+      {apellido:"Bellido", nombre:"Santiago Valentin", escritura_Marzo:"Alfabética"},
+      {apellido:"Bustos", nombre:"Jana Martina", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Calderon", nombre:"Ámbar Dana Sofía", escritura_Marzo:"Alfabética"},
+      {apellido:"Castillo", nombre:"Ciro Camilo", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Castillo", nombre:"Santino Joaquín", escritura_Marzo:"Silábica"},
+      {apellido:"Castro", nombre:"Franchesca Valentina", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Fernandez", nombre:"Hana Aymara", escritura_Marzo:"Alfabética"},
+      {apellido:"Heredia", nombre:"Bruno Delfina Milagros", escritura_Marzo:"Alfabética"},
+      {apellido:"Montenegro", nombre:"Paz Emma Maydlin", escritura_Marzo:"Alfabética"},
+      {apellido:"Olariaga", nombre:"Ícaro Benjamín", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Oronas", nombre:"Carpio Melissa", escritura_Marzo:"Alfabética"},
+      {apellido:"Pascal", nombre:"Maita Liam Benicio", escritura_Marzo:"Alfabética"},
+      {apellido:"Robledo", nombre:"Gianna Nicole", escritura_Marzo:"Alfabética"},
+      {apellido:"Rocha", nombre:"Hector Dereck", escritura_Marzo:"Alfabética"},
+      {apellido:"Sosa", nombre:"Junior Emanuel", escritura_Marzo:"Alfabética"},
+      {apellido:"Tozas", nombre:"Lorenzo", escritura_Marzo:"Alfabética"},
+      {apellido:"Villegas", nombre:"Merlín Santino", marca:"CUD", trayectoria:"CUD en trámite", nivel_escritura_ajuste_Marzo:"Diferenciada"},
+      {apellido:"Zalazar", nombre:"Ambar Tiziana", escritura_Marzo:"Silábica alfabética"},
+    ],
+  },
+  "2°C":{
+    titulo:"Compromiso Alfabetizador CB@ · 2°C",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Acosta", nombre:"Rodriguez Melina Lourdes", marca:"CUD", nivel_escritura_ajuste_Marzo:"Silábica"},
+      {apellido:"Barretto", nombre:"Fabricio Uriel", escritura_Marzo:"Alfabética"},
+      {apellido:"Basualdo", nombre:"Vargas Dulce Abigail", escritura_Marzo:"Alfabética"},
+      {apellido:"Bianco", nombre:"Peyton", escritura_Marzo:"Alfabética"},
+      {apellido:"Chavez", nombre:"Marbián Isabella Selene", escritura_Marzo:"Alfabética"},
+      {apellido:"Gonzalez", nombre:"Lopez Sofía", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Guzman", nombre:"Ludmila", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Junod", nombre:"Mauro David", escritura_Marzo:"Alfabética"},
+      {apellido:"Luna", nombre:"Leiria Felipe", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Marbian", nombre:"Bruno", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Marquez", nombre:"Zoe Riley", escritura_Marzo:"Alfabética"},
+      {apellido:"Moyano", nombre:"Casariego Martina Abigail", marca:"CUD", nivel_escritura_ajuste_Marzo:"Diferenciada"},
+      {apellido:"Paz", nombre:"Renata", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Polanco", nombre:"Zaira", escritura_Marzo:"Alfabética"},
+      {apellido:"Reggi", nombre:"Rivara Luana", escritura_Marzo:"Alfabética"},
+      {apellido:"Rivero", nombre:"Aytana Franchesca", escritura_Marzo:"Alfabética"},
+      {apellido:"Rodriguez", nombre:"Catalina Celeste", escritura_Marzo:"Alfabética"},
+      {apellido:"Ruiz", nombre:"Genaro Ismael", escritura_Marzo:"Alfabética"},
+      {apellido:"Soria", nombre:"Enzo Ismael", escritura_Marzo:"Alfabética"},
+      {apellido:"Suarez", nombre:"Gemolotto Amapola", escritura_Marzo:"Alfabética"},
+      {apellido:"Zarate", nombre:"Noah Valentín", escritura_Marzo:"Alfabética"},
+    ],
+  },
+  "3°A":{
+    titulo:"Compromiso Alfabetizador CB@ · 3°A",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Acosta", nombre:"Federico Martín", escritura_Marzo:"Alfabética"},
+      {apellido:"Acosta", nombre:"Lian Bautista", escritura_Marzo:"Alfabética"},
+      {apellido:"Baquina", nombre:"Alessio Adriano", escritura_Marzo:"Alfabética"},
+      {apellido:"Benitez", nombre:"Lia Agostina", escritura_Marzo:"Alfabética"},
+      {apellido:"Caceres", nombre:"Malaquie Ariana", escritura_Marzo:"Alfabética"},
+      {apellido:"Carranza", nombre:"Doesserich Ismael", escritura_Marzo:"Alfabética"},
+      {apellido:"Clavijo", nombre:"Guillermina", escritura_Marzo:"Alfabética"},
+      {apellido:"Fidela", nombre:"Mateo Roberto", escritura_Marzo:"Alfabética"},
+      {apellido:"Ledesma", nombre:"Oustin Eloy", escritura_Marzo:"Alfabética"},
+      {apellido:"Machuca", nombre:"Mamani Jhuno Soledad", escritura_Marzo:"Alfabética"},
+      {apellido:"Monsalvo", nombre:"Aaron Hernán", escritura_Marzo:"Alfabética"},
+      {apellido:"Moreyra", nombre:"Ián Emir", escritura_Marzo:"Alfabética"},
+      {apellido:"Morillo", nombre:"Olmedo Renata Valentina", escritura_Marzo:"Alfabética"},
+      {apellido:"Musse", nombre:"Kianna Guillermina", escritura_Marzo:"Alfabética"},
+      {apellido:"Ortiz", nombre:"Amaya Sofia Maui", escritura_Marzo:"Alfabética"},
+      {apellido:"Oviedo", nombre:"Dylan Katriel", escritura_Marzo:"Alfabética"},
+      {apellido:"Pizarro", nombre:"Chissere Genaro Ezequiel", escritura_Marzo:"Alfabética"},
+      {apellido:"Pizarro", nombre:"Chissere Ignacio Benjamín", marca:"MEMO2", trayectoria:"MEMO2 - PPI (doble condición registrada)", nivel_escritura_ajuste_Marzo:"Diferenciada"},
+      {apellido:"Rodriguez", nombre:"Monje Genaro Agustín", marca:"MEMO2", trayectoria:"MEMO2 - PPI (doble condición registrada)", nivel_escritura_ajuste_Marzo:"Diferenciada"},
+      {apellido:"Salgado", nombre:"Coronel Guadalupe Trinidad", marca:"CUD", nivel_escritura_ajuste_Marzo:"Alfabética"},
+      {apellido:"Sanchez", nombre:"Facundo Ezequiel", marca:"CUD", nivel_escritura_ajuste_Marzo:"Alfabética"},
+      {apellido:"Sandoval", nombre:"Felipe", escritura_Marzo:"Alfabética"},
+      {apellido:"Silva", nombre:"Tomás Nicolás", escritura_Marzo:"Alfabética"},
+    ],
+  },
+  "3°B":{
+    titulo:"Compromiso Alfabetizador CB@ · 3°B",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Acosta", nombre:"Godoy Ana Franchesca Berenice", escritura_Marzo:"Alfabética"},
+      {apellido:"Castro", nombre:"Angelina Elizabeth", escritura_Marzo:"Alfabética"},
+      {apellido:"Ceballos", nombre:"Bastian Yair", escritura_Marzo:"Alfabética"},
+      {apellido:"Charras", nombre:"Olivia Victoria", escritura_Marzo:"Alfabética"},
+      {apellido:"Diaz", nombre:"Camilo", escritura_Marzo:"Alfabética"},
+      {apellido:"Gimenez", nombre:"Mia Agustina", escritura_Marzo:"Alfabética"},
+      {apellido:"Gramaglia", nombre:"Rugani Samir", escritura_Marzo:"Alfabética"},
+      {apellido:"Holi", nombre:"Maximo", escritura_Marzo:"Alfabética"},
+      {apellido:"Iriarte", nombre:"Milo Tiziano", escritura_Marzo:"Alfabética"},
+      {apellido:"Leiria", nombre:"Nahuel Nicolás", escritura_Marzo:"Alfabética"},
+      {apellido:"Mansilla", nombre:"Brittani Jazmín", escritura_Marzo:"Cuasialfabética"},
+      {apellido:"Martinez", nombre:"Lopez Fernando Yoel", escritura_Marzo:"Alfabética"},
+      {apellido:"Moreno", nombre:"Ciro Benjamín", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Moyano", nombre:"Gimenez Bautista Aaron", escritura_Marzo:"Alfabética"},
+      {apellido:"Paez", nombre:"Sanchez Gina Amelia", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Reartes", nombre:"Lucas Ezequiel", escritura_Marzo:"Alfabética"},
+      {apellido:"Rudulfo", nombre:"Thiago Ian", escritura_Marzo:"Alfabética"},
+      {apellido:"Salinas", nombre:"Josefina Victoria", escritura_Marzo:"Alfabética"},
+      {apellido:"Torres", nombre:"Guzman Camila Saray", escritura_Marzo:"Silábica alfabética"},
+      {apellido:"Villegas", nombre:"Zoe Aylín", escritura_Marzo:"Alfabética"},
+    ],
+  },
+  "3°C":{
+    titulo:"Compromiso Alfabetizador CB@ · 3°C",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Martínez", nombre:"Taylor Sebastián", escritura_Marzo:"Alfabética"},
+      {apellido:"Castillo", nombre:"Araceli Celeste", escritura_Marzo:"Alfabética"},
+      {apellido:"Castro", nombre:"Jazmín Antonella", escritura_Marzo:"Alfabética"},
+      {apellido:"Diaz", nombre:"Hosen Bautista Benicio", escritura_Marzo:"Alfabética"},
+      {apellido:"Farfán", nombre:"Moreno Alejandro Fabián", escritura_Marzo:"Silábica"},
+      {apellido:"Gómez", nombre:"Genesis Aldana", escritura_Marzo:"Alfabética"},
+      {apellido:"Gómez", nombre:"Mateo Benjamín", escritura_Marzo:"Alfabética"},
+      {apellido:"Medina", nombre:"Sosa Emma", escritura_Marzo:"Alfabética"},
+      {apellido:"Palacios", nombre:"Ahymara Martina", escritura_Marzo:"Silábica"},
+      {apellido:"Palacios", nombre:"Marcos Nehuen", escritura_Marzo:"Silábica"},
+      {apellido:"Pereyra", nombre:"Ezequiel Eloy", escritura_Marzo:"Silábica"},
+      {apellido:"Páez", nombre:"Umma Renata", escritura_Marzo:"Alfabética"},
+      {apellido:"Sanrame", nombre:"Isabella", escritura_Marzo:"Alfabética"},
+      {apellido:"Silva", nombre:"Maitena Aremi", escritura_Marzo:"Alfabética"},
+      {apellido:"Suero", nombre:"Francisco", escritura_Marzo:"Alfabética"},
+      {apellido:"Torres", nombre:"Morena Zoe", escritura_Marzo:"Alfabética"},
+      {apellido:"Vilche", nombre:"Francisco", escritura_Marzo:"Alfabética"},
+      {apellido:"Villarreal", nombre:"Luengo", escritura_Marzo:"Alfabética"},
+      {apellido:"Zuñiga", nombre:"D Errico Francesca Elizabeth", escritura_Marzo:"Alfabética"},
+    ],
+  },
+  "4°A":{
+    titulo:"Compromiso Alfabetizador CB@ · 4°A",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Artiles", nombre:"María Victoria", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Boeris", nombre:"Catalina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Dominguez", nombre:"Barrionuevo Agustina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Fidela", nombre:"Amadeo Miqueas", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Flores", nombre:"Martina Aylen", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Garrido", nombre:"Francisco Benjamín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gesi", nombre:"Jael", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Godoy", nombre:"Quiroga Ciro Alejandro", marca:"MEMO2", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Gomez", nombre:"Sanchez Jeremías", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gomez", nombre:"Thiago Yuthiel", marca:"MEMO2", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Diferenciada"},
+      {apellido:"González", nombre:"Aymara Belén", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"González", nombre:"Ludmila Nailen", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Lopez", nombre:"Brisa Jazmín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Lopez", nombre:"Natasha Abigail", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Martinez", nombre:"Diana Emily", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Merlo", nombre:"Monsalvo Loan Benjamín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Moreno", nombre:"Torres Thiago Manuel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Murua", nombre:"Dylan Josué", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Nocelli", nombre:"Mateo Alejo", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Olmedo", nombre:"Isaías Samuel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Perez", nombre:"Dalma Eluney", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Saal", nombre:"Nehemias Emir", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Sosa", nombre:"Ledesma Ramiro", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Unia", nombre:"Mateo Marcelo", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Villarreal", nombre:"Anna Isabella", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+    ],
+  },
+  "4°B":{
+    titulo:"Compromiso Alfabetizador CB@ · 4°B",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Aguirre", nombre:"Liendo Jose Jophiel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Baez", nombre:"Joaquin Nihuel", marca:"CUD", trayectoria:"CUD - MEMO2 (doble condición registrada) · Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Diferenciada"},
+      {apellido:"Barrera", nombre:"Jazmin Abigail", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Barrientos", nombre:"Lian", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Blando", nombre:"Liam Agustin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Borella", nombre:"Celis Paloma Almendra", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Casariego", nombre:"Keyla Magali", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Chavez", nombre:"Maximo Nahum", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Comisario", nombre:"Leonel Adrian", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Cortes", nombre:"Tiano Gabriel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Llanes", nombre:"Adriel Enrique", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Olmedo", nombre:"Francisco David", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Paez", nombre:"Liendo Olivia", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Palacios", nombre:"Briana Lara", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Quintero", nombre:"Beltran Benjamin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rodriguez", nombre:"Herrera Nestor Miqueas", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rodriguez", nombre:"Zamora Mara Consuelo", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Zalazar", nombre:"Francesca", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+    ],
+  },
+  "4°C":{
+    titulo:"Compromiso Alfabetizador CB@ · 4°C",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Angulo", nombre:"Pablo Gabriel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Barrera", nombre:"Alma Elsa", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Bustos", nombre:"Gianella Nicole", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Carpio", nombre:"Cubeta Isabela Abigail", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Escobar", nombre:"Moreyra Lourdes Natalia", marca:"CUD", trayectoria:"Nivel de alfabetización no registrado en la nómina original (figura como CUD sin nivel)."},
+      {apellido:"Gigena", nombre:"Bianca Catalina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Guzman", nombre:"Videla Blanca Sofia", marca:"CUD", trayectoria:"Nivel de alfabetización no registrado en la nómina original (figura como CUD sin nivel)."},
+      {apellido:"Lopez", nombre:"Emilia", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Lopez", nombre:"Lorenzo Noha", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Luna", nombre:"Martina Emilia", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Madera", nombre:"Priya Alexandra", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Mansueto", nombre:"Rodriguez Noah Elian", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Miguez", nombre:"Matteo", marca:"CUD", trayectoria:"Nivel de alfabetización no registrado en la nómina original (figura como CUD sin nivel)."},
+      {apellido:"Olmedo", nombre:"Yazmín Desireé", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Oviedo", nombre:"Milena Azul", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Paez", nombre:"Ambar", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Quinteros", nombre:"Asis Azul Milagros", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Rearte", nombre:"Reggi Indinarella", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Reartes", nombre:"Argüello Ambar Cataleya", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Rodriguez", nombre:"Luis Gabriel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Tejeda", nombre:"Felicia Eluney", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Vallejo", nombre:"Gabriel Alexander", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Villarreal", nombre:"Lorenzo Valentín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Zalazar", nombre:"Enzo Gael", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Zoi", nombre:"Murua Ciro Valentín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+    ],
+  },
+  "5°A":{
+    titulo:"Compromiso Alfabetizador CB@ · 5°A",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Barrera", nombre:"Jeremías Samuel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Burget", nombre:"Acosta Amalia Angela", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Bustos", nombre:"Thian Ramiro", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Caceres", nombre:"Bianca Martina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Calderon", nombre:"Cristiano Aaron", marca:"PPI", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Cerutti", nombre:"Cordoba Alan Matheo", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Chissere", nombre:"Lautaro Cristian", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Cuello", nombre:"Olivia Elizabet", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Fernandez", nombre:"Francesca Abigail", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Fernandez", nombre:"Mateo Gabriel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Garcia", nombre:"Ana Paula", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Lopez", nombre:"Ramirez Jhojans Rodrigo", marca:"PPI", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Marbian", nombre:"Santino Bautista", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Montes", nombre:"De Oca Faustina", marca:"CUD", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Morillo", nombre:"Olmedo Lola Aimara", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Oliva", nombre:"Farias Josefina", marca:"CUD", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Olmedo", nombre:"Briana Narella", marca:"CUD", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Palacios", nombre:"Moreno Bautista", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Pizarro", nombre:"Chissere Luz Martina", marca:"PPI", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Ponce", nombre:"Rodriguez Denis Nicolas", marca:"CUD", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Porto", nombre:"Dylan Joaquín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Racedo", nombre:"Juan Alejandro", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rivero", nombre:"Alma Nahyara", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Robledo", nombre:"Cuello Fabricio Valentino", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Romero", nombre:"Luz Paula", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Videla", nombre:"Martin Alejandro", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Zarate", nombre:"Jonas Esteban", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+    ],
+  },
+  "5°B":{
+    titulo:"Compromiso Alfabetizador CB@ · 5°B",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Gonzalez", nombre:"Francisco Lautaro", marca:"CUD", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Artiles", nombre:"Geremías Nahuel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Berraquero", nombre:"Lola", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Campani", nombre:"Giulianno", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Díaz", nombre:"Melanie Jazmín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Escudero", nombre:"Quinteros Nehitan Nikanor", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Garro", nombre:"Muratti Mateo Valentin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Hecklein", nombre:"Giordanengo Benjamín Nicolás", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Heredia", nombre:"Milo Salvador", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Juarez", nombre:"Nelson Danilo", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Layus", nombre:"Dylan Zantino", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Lopez", nombre:"Zambrano Berenisse", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Luppi", nombre:"Thiago Damir", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Oviedo", nombre:"Dylan Valentino", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Palacios", nombre:"Teodora", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Pedernera", nombre:"Lourdes Milagros", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Peralta", nombre:"Mía Ayelén", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Pereyra", nombre:"Oliva Ciro Ezequiel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Quevedo", nombre:"Iara Jazmín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rodriguez", nombre:"Lucas Lionel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Saal", nombre:"Milena Melek", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Smaldoni", nombre:"Polo Joaquín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Villalba", nombre:"Nehemías Agustín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Zabala", nombre:"Umma Jazmín", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+    ],
+  },
+  "5°C":{
+    titulo:"Compromiso Alfabetizador CB@ · 5°C",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Acosta", nombre:"Jano Yuthiel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Altamirano", nombre:"Umma", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Baigorri", nombre:"Emilia", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Benavidez", nombre:"Ciara Naomi", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Benavidez", nombre:"Rut", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Capdevila", nombre:"Cuello Jano Franchesco", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Cuello", nombre:"Arregui Zoe Ludmila", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Echavarria", nombre:"Matias", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Farfan", nombre:"Ignacio", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gimenez", nombre:"Mosto Sol Milagros", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gimenez", nombre:"Mosto Uma Martina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gonzalez", nombre:"Nahiara", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Marbian", nombre:"Valentino", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Muñoz", nombre:"Casariego Luz Milagros", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Oronas", nombre:"Carpio Ignacio", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Reaetes", nombre:"Yuthiel Alexander", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rivero", nombre:"Diaz Maite Amelie", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Saldaño", nombre:"Franchesca Eluney", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Villarroel", nombre:"Milagros Andrea", marca:"CUD", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica"},
+      {apellido:"Zarate", nombre:"Briza Del Valle", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Zarate", nombre:"Theo Benjamin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Zuñiga", nombre:"D Errico Olivia Jazmin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+    ],
+  },
+  "6°A":{
+    titulo:"Compromiso Alfabetizador CB@ · 6°A",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Bado", nombre:"Emanuel Ezequiel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Caceres", nombre:"Malaquie Renata", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Calderon", nombre:"Sanabria Azul Morena", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Carranza", nombre:"Sgro Umma Ariana", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Cueva", nombre:"Minuet Alex Benjamin", marca:"CUD", trayectoria:"CUD - PPI (doble condición registrada) · Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Garrido", nombre:"Matías Jesús", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gomez", nombre:"Sanchez Martina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gonzalez", nombre:"Agostina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Herrera", nombre:"Urquiza Trinidad Sara", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Juarez", nombre:"Ivo Tomás", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Lopez", nombre:"Luz Giuliana", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Lopez", nombre:"Mia Elina Valentina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Moreno", nombre:"Torres Yuthiel Alejandro", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Oliva", nombre:"Thiago Lihuel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Pedernera", nombre:"Rodriguez Sofia Evelin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Pereyra", nombre:"Charras Antonella Celeste", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Ramirez", nombre:"Liendo Niraj Santino", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rodriguez", nombre:"Paez Lucio Benjamin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Romero", nombre:"Lopez Kevin Alexander", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Santa", nombre:"Cruz Angel Rodrigo", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Sosa", nombre:"Malena Abril", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Toledo", nombre:"Julieta Pilar", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Varela", nombre:"Bustamante Briana Debora", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Vivas", nombre:"Alison Franchesca", trayectoria:"Ajuste razonable en proceso (sin marca definida en la nómina original) · Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Zarate", nombre:"Lucietti Celeste Delfina", marca:"CUD", trayectoria:"CUD - PPI (doble condición registrada) · Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Zarate", nombre:"Lucietti Micaela Soledad", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+    ],
+  },
+  "6°B":{
+    titulo:"Compromiso Alfabetizador CB@ · 6°B",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Azpeitia", nombre:"Felipe", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Barraquero", nombre:"Juana", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Barretto", nombre:"Gino Tiziano", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Bredanini", nombre:"Mia Agustina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Bringas", nombre:"Altamirano Nahuel Alejandro", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Bustos", nombre:"María Victoria", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Bustos", nombre:"Perez Guadalupe", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Chavez", nombre:"Valentino Tomas", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Colombini", nombre:"Natasha Ailen", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Escobarez", nombre:"Martín Antonio", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gomez", nombre:"Miqueas David", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Ludueña", nombre:"Carlos Valentin", marca:"CUD", trayectoria:"CUD - PPI (doble condición registrada) · Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica"},
+      {apellido:"Marquez", nombre:"Ciro Santino", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Medina", nombre:"Lourdes Mercedes", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Olmedo", nombre:"Umma Francesca", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Olmedo", nombre:"Xiomara Maite", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Oviedo", nombre:"Santino Josue", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Parejas", nombre:"Gonzalo Benjamin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Pereyra", nombre:"Emma Olivia", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Peña", nombre:"Santino Agustin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rial", nombre:"Vidal Cano Valentina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rodriguez", nombre:"Luana Ailin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rojo", nombre:"Roger Uriel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Romero", nombre:"Nuñez Facundo Ariel", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Villarreal", nombre:"Ada Luz", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+    ],
+  },
+  "6°C":{
+    titulo:"Compromiso Alfabetizador CB@ · 6°C",
+    descripcion:"Primer corte evaluativo (Marzo/Abril/Mayo) -> corte Marzo",
+    estudiantes:[
+      {apellido:"Agüero", nombre:"Zuleta Aaron", marca:"PPI", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Barrera", nombre:"Lopez Lena Evangelina", marca:"CUD", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Silábica alfabética"},
+      {apellido:"Basualdo", nombre:"Thiago Daniel", marca:"CUD", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Blando", nombre:"Bianca Yazmin", marca:"CUD", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Cabaña", nombre:"Lopez Kiara Martina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Castro", nombre:"Alexia Franchesca", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Diaz", nombre:"Lara Macarena", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"D", nombre:"Ingianna Benjamin Luca", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Ervidia", nombre:"Gallardo Emma Tiziana", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Fernandez", nombre:"Guadalupe Araceli", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gimenez", nombre:"Theo Ezequiel", marca:"PPI", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gonzalez", nombre:"Victoria", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Gordoa", nombre:"Ferreyra Bautista", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Lara", nombre:"Irina Desirée", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Lara", nombre:"Yesenia Avril", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Ledesma", nombre:"Aarón Bautista", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Lescano", nombre:"Carballo Aaron Benjamin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Cuasialfabética"},
+      {apellido:"Mansilla", nombre:"Isaac Efrain", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Manzanelli", nombre:"Tiziano Alejandro", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Murua", nombre:"Bernardi Zoe Valentina", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Muñoz", nombre:"Florencia Ailen", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Olmedo", nombre:"Alejo Valentin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rivarola", nombre:"Suero Joaquin Benjamin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Rodriguez", nombre:"Ciro Lorenzo", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Vallejo", nombre:"Yazmin Ailen", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+      {apellido:"Vilche", nombre:"Ambar Yazmin", trayectoria:"Nivel de alfabetización (Marzo, Compromiso Alfabetizador CB@): Alfabética"},
+    ],
+  },
+};
+async function importarSeccion(secId){
+  const imp=IMPORTS_PENDIENTES[secId];
+  if(!imp)return;
+  if(!confirm(`Se van a agregar ${imp.estudiantes.length} estudiantes a ${secId.replace(/([A-Z])$/,' Sección $1')}.\n\n${imp.descripcion}\n\nSi ya cargaste estos alumnos antes, se van a duplicar. ¿Continuar?`))return;
+  const prev=STATE.allData[secId]||[];
+  const grado=secId.slice(0,-1),seccion=secId.slice(-1);
+  const nuevos=imp.estudiantes.map((n,i)=>{
+    const{apellido,nombre,marca,trayectoria,...extras}=n;
+    return{
+      apellido,nombre,marca:marca||"",grado,seccion,
+      indicadores:{},indicadores_ajuste:{},trayectoria:trayectoria||"",
+      ...extras,
+      id:Date.now()+i,
+    };
+  });
+  const upd=[...prev,...nuevos];
+  setState({allData:{...STATE.allData,[secId]:upd}});
+  await dbSet(`sec-${secId}`,JSON.stringify(upd));
+  alert(`Listo. Se cargaron ${nuevos.length} estudiantes en ${secId}.`);
+}
+
 function vistaSeccion(){
   const sec=STATE.seccion;
   const todos=STATE.allData[sec.id]||[];
@@ -334,7 +874,12 @@ function vistaCarga(){
   else if(STATE.filtroMarca==="regulares")ests=ests.filter(e=>!e.marca);
   if(STATE.busqEst)ests=ests.filter(e=>`${e.apellido} ${e.nombre}`.toLowerCase().includes(STATE.busqEst.toLowerCase()));
   ests=ests.sort((a,b)=>a.apellido.localeCompare(b.apellido));
-  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+  const imp=IMPORTS_PENDIENTES[secId];
+  return`${imp?`<div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+    <div style="font-size:12px;color:#92400e"><b>📥 ${imp.titulo} detectado.</b> Podés importar los ${imp.estudiantes.length} estudiantes de un solo clic (${imp.descripcion}).</div>
+    <button onclick="importarSeccion('${secId}')" style="background:#d97706;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif">Importar ${imp.estudiantes.length} estudiantes</button>
+  </div>`:""}
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
       <input style="width:180px" value="${STATE.busqEst}" placeholder="Buscar estudiante..." oninput="setState({busqEst:this.value})"/>
       ${selectorCorte()}
@@ -577,14 +1122,28 @@ function modalConfirmarBorrar(){
 }
 
 // ── NIVELES POR CORTE (gráfico circular) ──────────────
-function contarNiveles(g,corte,campo,niveles,campoAjuste){
+function contarNiveles(g,corte,campo,niveles,campoAjuste,seccion){
   const counts={};niveles.forEach(n=>counts[n]=0);
   let total=0;
-  SECCIONES.forEach(sc=>{
+  const secs=(seccion&&seccion!=="todas")?[seccion]:SECCIONES;
+  secs.forEach(sc=>{
     (STATE.allData[`${g}${sc}`]||[]).forEach(e=>{
       let v;
       if(e.marca){ if(campoAjuste) v=e[`${campoAjuste}_${corte}`]; }
       else v=e[`${campo}_${corte}`];
+      if(v && Object.prototype.hasOwnProperty.call(counts,v)){counts[v]++;total++;}
+    });
+  });
+  return{counts,total};
+}
+function contarFluidez(g,corte,dim,seccion){
+  const counts={};LOGRO.forEach(n=>counts[n]=0);
+  let total=0;
+  const secs=(seccion&&seccion!=="todas")?[seccion]:SECCIONES;
+  secs.forEach(sc=>{
+    (STATE.allData[`${g}${sc}`]||[]).forEach(e=>{
+      if(e.marca)return;
+      const v=e[`fluidez_${dim}_${corte}`];
       if(v && Object.prototype.hasOwnProperty.call(counts,v)){counts[v]++;total++;}
     });
   });
@@ -622,30 +1181,42 @@ function panelDonut(corte,color,data,colorMap,orden){
     </div>
   </div>`;
 }
-function vistaNivelesPorCorte(g){
+function vistaNivelesPorCorte(g,seccion){
   const colorEscritura={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasialfabética":"#d97706","Alfabética":"#16a34a"};
   const colorLectura={"Diferenciada":"#7c3aed","Silábica":"#db2877","Alfabética":"#16a34a"};
+  const colorLogro={"Consolidado":"#16a34a","En proceso":"#d97706","Incipiente":"#dc2626"};
   const mostrarEscritura=["1°","2°","3°"].includes(g);
   const mostrarLectura=["1°","2°"].includes(g);
-  if(!mostrarEscritura&&!mostrarLectura){
-    return`<div style="background:#fff;border-radius:16px;padding:40px;box-shadow:0 2px 16px #0001;text-align:center;color:#94a3b8">
-      ${g} no tiene Nivel de Escritura/Lectura (usa Fluidez Lectora, disponible en la pestaña "📊 Resumen por sección").
-    </div>`;
+  const mostrarFluidez=["3°","4°","5°","6°"].includes(g);
+  const etiquetaSeccion=(seccion&&seccion!=="todas")?`Sección ${seccion}`:"Todas las secciones (A+B+C)";
+  if(!mostrarEscritura&&!mostrarLectura&&!mostrarFluidez){
+    return`<div style="background:#fff;border-radius:16px;padding:40px;box-shadow:0 2px 16px #0001;text-align:center;color:#94a3b8">Sin indicadores de nivel para ${g}.</div>`;
   }
   return`
     ${mostrarEscritura?`<div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001;margin-bottom:16px">
       <div style="font-family:'Playfair Display',serif;font-size:16px;color:#1e293b;margin-bottom:4px">✍️ Nivel de Escritura · ${g} Grado</div>
-      <div style="font-size:11px;color:#94a3b8;margin-bottom:16px">Todas las secciones (A+B+C) · incluye estudiantes con ajustes razonables</div>
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:16px">${etiquetaSeccion} · incluye estudiantes con ajustes razonables</div>
       <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:space-around">
-        ${CORTES.map(c=>panelDonut(c,"#7c3aed",contarNiveles(g,c,"escritura",NIV_ESCRITURA,"nivel_escritura_ajuste"),colorEscritura,NIV_ESCRITURA)).join("")}
+        ${CORTES.map(c=>panelDonut(c,"#7c3aed",contarNiveles(g,c,"escritura",NIV_ESCRITURA,"nivel_escritura_ajuste",seccion),colorEscritura,NIV_ESCRITURA)).join("")}
       </div>
     </div>`:""}
-    ${mostrarLectura?`<div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001">
+    ${mostrarLectura?`<div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001;margin-bottom:16px">
       <div style="font-family:'Playfair Display',serif;font-size:16px;color:#1e293b;margin-bottom:4px">📖 Nivel de Lectura · ${g} Grado</div>
-      <div style="font-size:11px;color:#94a3b8;margin-bottom:16px">Todas las secciones (A+B+C) · solo estudiantes sin ajustes razonables</div>
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:16px">${etiquetaSeccion} · solo estudiantes sin ajustes razonables</div>
       <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:space-around">
-        ${CORTES.map(c=>panelDonut(c,"#db2877",contarNiveles(g,c,"lectura12",NIV_LECTURA_12,null),colorLectura,NIV_LECTURA_12)).join("")}
+        ${CORTES.map(c=>panelDonut(c,"#db2877",contarNiveles(g,c,"lectura12",NIV_LECTURA_12,null,seccion),colorLectura,NIV_LECTURA_12)).join("")}
       </div>
+    </div>`:""}
+    ${mostrarFluidez?`<div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:#1e293b;margin-bottom:4px">📖 Fluidez Lectora · ${g} Grado</div>
+      <div style="font-size:11px;color:#94a3b8;margin-bottom:16px">${etiquetaSeccion} · solo estudiantes sin ajustes razonables</div>
+      ${["Velocidad","Precisión","Prosodia"].map(dim=>`
+        <div style="margin-bottom:20px">
+          <div style="font-size:12px;font-weight:700;color:#0ea5e9;margin-bottom:10px;padding-left:8px;border-left:3px solid #0ea5e9">${dim}</div>
+          <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:space-around">
+            ${CORTES.map(c=>panelDonut(c,"#0ea5e9",contarFluidez(g,c,dim,seccion),colorLogro,LOGRO)).join("")}
+          </div>
+        </div>`).join("")}
     </div>`:""}
   `;
 }
@@ -675,9 +1246,13 @@ function vistaDirectivo(){
           ${SECCIONES.map(sc=>`<button onclick="setState({dirSeccion:'${sc}'})" style="padding:7px 16px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${s===sc?"#881337":"#e2e8f0"};background:${s===sc?"#881337":"#fff"};color:${s===sc?"#fff":"#475569"}">Sección ${sc}</button>`).join("")}
         </div>
       </div>
-      ${selectorCorte()}`:""}
+      ${selectorCorte()}`:`<div><div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:4px;text-transform:uppercase">Sección</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${["todas",...SECCIONES].map(sc=>`<button onclick="setState({nivelesSeccion:'${sc}'})" style="padding:7px 16px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${(STATE.nivelesSeccion||"todas")===sc?"#881337":"#e2e8f0"};background:${(STATE.nivelesSeccion||"todas")===sc?"#881337":"#fff"};color:${(STATE.nivelesSeccion||"todas")===sc?"#fff":"#475569"}">${sc==="todas"?"Todas (A+B+C)":"Sección "+sc}</button>`).join("")}
+        </div>
+      </div>`}
     </div>
-    ${tab==="niveles"?vistaNivelesPorCorte(g):`
+    ${tab==="niveles"?vistaNivelesPorCorte(g,STATE.nivelesSeccion||"todas"):`
     <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001;margin-bottom:16px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
         <div style="font-family:'Playfair Display',serif;font-size:18px;color:#1e293b">${g} Sección ${s}</div>
