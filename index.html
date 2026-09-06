@@ -67,6 +67,18 @@ const LOGRO=["Consolidado","En proceso","Incipiente"];
 const LOGRO_AJUSTE=["Logrado","En proceso","Requiere acompañamiento"];
 const NIV_ESCRITURA=["Diferenciada","Silábica","Silábica alfabética","Cuasialfabética","Alfabética"];
 const NIV_LECTURA_12=["Diferenciada","Silábica","Alfabética"];
+const PROC_LECTOR=[
+  "A. Reconocimiento global / anticipación",
+  "B. Lectura silábica",
+  "C. Lectura alfabética en consolidación",
+  "D. Lectura alfabética autónoma y automatizada consolidada"
+];
+const PROC_LECTOR_COLOR={
+  "A. Reconocimiento global / anticipación":"#7c3aed",
+  "B. Lectura silábica":"#db2877",
+  "C. Lectura alfabética en consolidación":"#d97706",
+  "D. Lectura alfabética autónoma y automatizada consolidada":"#16a34a",
+};
 const MARCAS=["CUD","PPI","MEMO2"];
 const ESCUDO="https://i.imgur.com/qdHRS1d.png";
 
@@ -168,7 +180,14 @@ function badgeAjuste(v){
 function badgeNivel(v){
   if(!v)return`<span style="color:#cbd5e1;font-size:11px">—</span>`;
   const m={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasialfabética":"#d97706","Alfabética":"#16a34a"};
-  const col=m[v]||"#475569";
+  let col=m[v];
+  if(!col){
+    if(v.startsWith("A."))col="#7c3aed";
+    else if(v.startsWith("B."))col="#db2877";
+    else if(v.startsWith("C."))col="#d97706";
+    else if(v.startsWith("D."))col="#16a34a";
+    else col="#475569";
+  }
   return`<span style="background:${col}18;color:${col};border:1px solid ${col}44;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700">${v}</span>`;
 }
 function badgeMarca(marca){
@@ -926,7 +945,7 @@ function vistaTabla(){
         <th style="background:#1e293b" rowspan="2">Alumno/a</th>
         <th style="background:#a21caf;text-align:center" rowspan="2">Tipo</th>
         ${["1°","2°","3°"].includes(g)?`<th style="background:#7c3aed;text-align:center">✍️ Escritura</th>`:""}
-        ${["1°","2°"].includes(g)?`<th style="background:#db2877;text-align:center">📖 Lectura</th>`:""}
+        <th style="background:#db2877;text-align:center">📖 Proced. Lector</th>
         ${["3°","4°","5°","6°"].includes(g)?`<th style="background:#0ea5e9;text-align:center" colspan="3">📖 Fluidez</th>`:""}
         <th style="background:#4338ca;text-align:center" colspan="${iL.length}">📚 Lengua</th>
         <th style="background:#0369a1;text-align:center" colspan="${iM.length}">🔢 Matemática</th>
@@ -934,7 +953,7 @@ function vistaTabla(){
       <tr style="background:#334155">
         <th style="padding:8px 10px;color:#fff;font-size:10px"></th>
         ${["1°","2°","3°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
-        ${["1°","2°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Nivel</th>`:""}
+        <th style="padding:8px 10px;color:#fff;font-size:10px">Procedimiento</th>
         ${["3°","4°","5°","6°"].includes(g)?`<th style="padding:8px 10px;color:#fff;font-size:10px">Velocidad</th><th style="padding:8px 10px;color:#fff;font-size:10px">Precisión</th><th style="padding:8px 10px;color:#fff;font-size:10px">Prosodia</th>`:""}
         ${[...iL,...iM].map(i=>`<th style="padding:8px 10px;color:#fff;font-size:10px;max-width:90px;white-space:normal;line-height:1.3;text-align:left">${i}</th>`).join("")}
       </tr>
@@ -946,7 +965,7 @@ function vistaTabla(){
           <td style="font-weight:700;white-space:nowrap">${e.apellido}, ${e.nombre}</td>
           <td style="text-align:center">${e.marca?badgeMarca(e.marca):`<span style="color:#cbd5e1;font-size:10px">—</span>`}</td>
           ${["1°","2°","3°"].includes(g)?`<td style="text-align:center">${esEsp?badgeNivel(e[`nivel_escritura_ajuste_${STATE.corte}`]):badgeNivel(e[`escritura_${STATE.corte}`])}</td>`:""}
-          ${["1°","2°"].includes(g)?`<td style="text-align:center">${esEsp?`<span style="color:#a21caf;font-size:10px">Ajuste</span>`:badgeNivel(e[`lectura12_${STATE.corte}`])}</td>`:""}
+          <td style="text-align:center">${esEsp?`<span style="color:#a21caf;font-size:10px">Ajuste</span>`:badgeNivel(e[`procLector_${STATE.corte}`])}</td>
           ${["3°","4°","5°","6°"].includes(g)?`<td style="text-align:center">${esEsp?`<span style="color:#a21caf;font-size:10px">Ajuste</span>`:badge(e[`fluidez_Velocidad_${STATE.corte}`])}</td><td style="text-align:center">${esEsp?"":badge(e[`fluidez_Precisión_${STATE.corte}`])}</td><td style="text-align:center">${esEsp?"":badge(e[`fluidez_Prosodia_${STATE.corte}`])}</td>`:""}
           ${iL.map(ind=>`<td style="text-align:center">${esEsp?`<span style="color:#a21caf;font-size:10px">Ajuste</span>`:badge(e.indicadores?.[`lengua_${g}_${ind}`])}</td>`).join("")}
           ${iM.map(ind=>`<td style="text-align:center">${esEsp?`<span style="color:#a21caf;font-size:10px">Ajuste</span>`:badge(e.indicadores?.[`matematica_${g}_${ind}`])}</td>`).join("")}
@@ -1029,15 +1048,14 @@ function modalEstudiante(){
             </select></div>`;}).join("")}
         </div></div>`;
     };
-    const bLectura=()=>{
-      if(!["1°","2°"].includes(g))return"";
+    const bProcLector=()=>{
       return`<div style="margin-bottom:18px">
-        <div style="font-weight:700;color:#db2877;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #db2877">📖 Nivel de Lectura</div>
+        <div style="font-weight:700;color:#db2877;font-size:13px;margin-bottom:10px;padding-left:10px;border-left:3px solid #db2877">📖 Procedimiento Lector Predominante</div>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-          ${CORTES.map(c=>{const v=e[`lectura12_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
+          ${CORTES.map(c=>{const v=e[`procLector_${c}`]||"";return`<div style="background:#f8fafc;border-radius:8px;padding:8px 10px">
             <div style="font-size:11px;color:#db2877;margin-bottom:5px;font-weight:700">📅 ${c}</div>
-            <select data-key="lectura12_${c}" onchange="updateExtra('lectura12_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #db287744;background:#fdf2f8;color:#db2877;width:auto">
-              <option value="">— nivel —</option>${NIV_LECTURA_12.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
+            <select data-key="procLector_${c}" onchange="updateExtra('procLector_${c}',this.value)" style="font-size:11px;font-weight:700;border-radius:8px;padding:4px 6px;border:1.5px solid #db287744;background:#fdf2f8;color:#db2877;width:auto">
+              <option value="">— procedimiento —</option>${PROC_LECTOR.map(n=>`<option ${v===n?"selected":""}>${n}</option>`).join("")}
             </select></div>`;}).join("")}
         </div></div>`;
     };
@@ -1072,7 +1090,7 @@ function modalEstudiante(){
               </select></div>`;}).join("")}
         </div></div>`;
     };
-    return bEscritura()+bLectura()+bFluidez()+bInds("lengua","#6366f1","📚")+bInds("matematica","#0ea5e9","🔢");
+    return bEscritura()+bProcLector()+bFluidez()+bInds("lengua","#6366f1","📚")+bInds("matematica","#0ea5e9","🔢");
   };
 
   return`<div class="modal-overlay" onclick="if(event.target===this)cerrarModal()">
@@ -1183,15 +1201,10 @@ function panelDonut(corte,color,data,colorMap,orden){
 }
 function vistaNivelesPorCorte(g,seccion){
   const colorEscritura={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasialfabética":"#d97706","Alfabética":"#16a34a"};
-  const colorLectura={"Diferenciada":"#7c3aed","Silábica":"#db2877","Alfabética":"#16a34a"};
   const colorLogro={"Consolidado":"#16a34a","En proceso":"#d97706","Incipiente":"#dc2626"};
   const mostrarEscritura=["1°","2°","3°"].includes(g);
-  const mostrarLectura=["1°","2°"].includes(g);
   const mostrarFluidez=["3°","4°","5°","6°"].includes(g);
   const etiquetaSeccion=(seccion&&seccion!=="todas")?`Sección ${seccion}`:"Todas las secciones (A+B+C)";
-  if(!mostrarEscritura&&!mostrarLectura&&!mostrarFluidez){
-    return`<div style="background:#fff;border-radius:16px;padding:40px;box-shadow:0 2px 16px #0001;text-align:center;color:#94a3b8">Sin indicadores de nivel para ${g}.</div>`;
-  }
   return`
     ${mostrarEscritura?`<div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001;margin-bottom:16px">
       <div style="font-family:'Playfair Display',serif;font-size:16px;color:#1e293b;margin-bottom:4px">✍️ Nivel de Escritura · ${g} Grado</div>
@@ -1200,13 +1213,13 @@ function vistaNivelesPorCorte(g,seccion){
         ${CORTES.map(c=>panelDonut(c,"#7c3aed",contarNiveles(g,c,"escritura",NIV_ESCRITURA,"nivel_escritura_ajuste",seccion),colorEscritura,NIV_ESCRITURA)).join("")}
       </div>
     </div>`:""}
-    ${mostrarLectura?`<div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001;margin-bottom:16px">
-      <div style="font-family:'Playfair Display',serif;font-size:16px;color:#1e293b;margin-bottom:4px">📖 Nivel de Lectura · ${g} Grado</div>
+    <div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001;margin-bottom:16px">
+      <div style="font-family:'Playfair Display',serif;font-size:16px;color:#1e293b;margin-bottom:4px">📖 Procedimiento Lector Predominante · ${g} Grado</div>
       <div style="font-size:11px;color:#94a3b8;margin-bottom:16px">${etiquetaSeccion} · solo estudiantes sin ajustes razonables</div>
       <div style="display:flex;gap:24px;flex-wrap:wrap;justify-content:space-around">
-        ${CORTES.map(c=>panelDonut(c,"#db2877",contarNiveles(g,c,"lectura12",NIV_LECTURA_12,null,seccion),colorLectura,NIV_LECTURA_12)).join("")}
+        ${CORTES.map(c=>panelDonut(c,"#db2877",contarNiveles(g,c,"procLector",PROC_LECTOR,null,seccion),PROC_LECTOR_COLOR,PROC_LECTOR)).join("")}
       </div>
-    </div>`:""}
+    </div>
     ${mostrarFluidez?`<div style="background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 16px #0001">
       <div style="font-family:'Playfair Display',serif;font-size:16px;color:#1e293b;margin-bottom:4px">📖 Fluidez Lectora · ${g} Grado</div>
       <div style="font-size:11px;color:#94a3b8;margin-bottom:16px">${etiquetaSeccion} · solo estudiantes sin ajustes razonables</div>
@@ -1262,17 +1275,16 @@ function vistaDirectivo(){
         </div>
       </div>
       ${STATE.loading?loader():ests.length===0?`<div style="text-align:center;padding:32px;color:#94a3b8;border:2px dashed #fda4af;border-radius:12px">Sin datos</div>`:`
-      ${(["1°","2°","3°"].includes(g)||["1°","2°"].includes(g))?`
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
         ${["1°","2°","3°"].includes(g)?`<div style="flex:1;min-width:220px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:14px">
           <div style="font-size:11px;font-weight:700;color:#7c3aed;margin-bottom:8px">✍️ NIVEL DE ESCRITURA · ${STATE.corte}</div>
           ${resumenNivel(regulares,"escritura",STATE.corte,NIV_ESCRITURA)}
         </div>`:""}
-        ${["1°","2°"].includes(g)?`<div style="flex:1;min-width:220px;background:#fdf2f8;border:1px solid #fbcfe8;border-radius:12px;padding:14px">
-          <div style="font-size:11px;font-weight:700;color:#db2877;margin-bottom:8px">📖 NIVEL DE LECTURA · ${STATE.corte}</div>
-          ${resumenNivel(regulares,"lectura12",STATE.corte,NIV_LECTURA_12)}
-        </div>`:""}
-      </div>`:""}
+        <div style="flex:1;min-width:220px;background:#fdf2f8;border:1px solid #fbcfe8;border-radius:12px;padding:14px">
+          <div style="font-size:11px;font-weight:700;color:#db2877;margin-bottom:8px">📖 PROCEDIMIENTO LECTOR · ${STATE.corte}</div>
+          ${resumenNivel(regulares,"procLector",STATE.corte,PROC_LECTOR)}
+        </div>
+      </div>
       ${["3°","4°","5°","6°"].includes(g)?`
       <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:14px;margin-bottom:16px">
         <div style="font-size:11px;font-weight:700;color:#0ea5e9;margin-bottom:10px">📖 FLUIDEZ LECTORA · Semáforo · ${STATE.corte}</div>
@@ -1311,7 +1323,7 @@ function vistaDirectivo(){
             <div style="font-size:24px;font-weight:900;color:${total>0?"#be185d":"#cbd5e1"}">${total} <span style="font-size:12px;font-weight:400;color:#94a3b8">estudiantes</span></div>
             ${esp>0?`<div style="font-size:12px;color:#a21caf;font-weight:700;margin-top:4px">♿ ${esp} con ajustes</div>`:""}
             ${["1°","2°","3°"].includes(g)?`<div style="margin-top:10px"><div style="font-size:10px;font-weight:700;color:#7c3aed">✍️ Escritura (${STATE.corte})</div>${resumenNivel(reg,"escritura",STATE.corte,NIV_ESCRITURA)}</div>`:""}
-            ${["1°","2°"].includes(g)?`<div style="margin-top:6px"><div style="font-size:10px;font-weight:700;color:#db2877">📖 Lectura (${STATE.corte})</div>${resumenNivel(reg,"lectura12",STATE.corte,NIV_LECTURA_12)}</div>`:""}
+            <div style="margin-top:6px"><div style="font-size:10px;font-weight:700;color:#db2877">📖 Proced. Lector (${STATE.corte})</div>${resumenNivel(reg,"procLector",STATE.corte,PROC_LECTOR)}</div>
             ${["3°","4°","5°","6°"].includes(g)?`<div style="margin-top:10px">
               <div style="font-size:10px;font-weight:700;color:#0ea5e9;margin-bottom:4px">📖 Fluidez (${STATE.corte})</div>
               <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -1354,7 +1366,7 @@ function generarPDF(ests,sec){
   const iL=INDS.lengua[g]||[],iM=INDS.matematica[g]||[];
   const cL=v=>v==="Consolidado"?"#16a34a":v==="En proceso"?"#d97706":v==="Incipiente"?"#dc2626":"#94a3b8";
   const cA=v=>v==="Logrado"?"#16a34a":v==="En proceso"?"#d97706":v==="Requiere acompañamiento"?"#a21caf":"#94a3b8";
-  const cN=v=>{const m={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasialfabética":"#d97706","Alfabética":"#16a34a"};return m[v]||"#475569";};
+  const cN=v=>{const m={"Diferenciada":"#7c3aed","Silábica":"#db2877","Silábica alfabética":"#ea580c","Cuasialfabética":"#d97706","Alfabética":"#16a34a"};if(m[v])return m[v];if(!v)return"#475569";if(v.startsWith("A."))return"#7c3aed";if(v.startsWith("B."))return"#db2877";if(v.startsWith("C."))return"#d97706";if(v.startsWith("D."))return"#16a34a";return"#475569";};
   const win=window.open("","_blank");
   win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Ficha · ${ests.length===1?ests[0].apellido+", "+ests[0].nombre:sec.label}</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet"/>
@@ -1400,7 +1412,7 @@ function generarPDF(ests,sec){
           </div>
         </div>`:`
         ${["1°","2°","3°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#7c3aed">✍️ NIVEL DE ESCRITURA</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${cN(e["escritura_"+c])}">${e["escritura_"+c]||"—"}</span></span>`).join("")}</div>`:""}
-        ${["1°","2°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#db2877">📖 NIVEL DE LECTURA</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${cN(e["lectura12_"+c])}">${e["lectura12_"+c]||"—"}</span></span>`).join("")}</div>`:""}
+        <div style="margin-bottom:8px"><b style="font-size:11px;color:#db2877">📖 PROCEDIMIENTO LECTOR PREDOMINANTE</b><br/>${CORTES.map(c=>`<span style="font-size:11px;margin-right:12px"><b>${c}:</b> <span style="color:${cN(e["procLector_"+c])}">${e["procLector_"+c]||"—"}</span></span>`).join("")}</div>
         ${["3°","4°","5°","6°"].includes(g)?`<div style="margin-bottom:8px"><b style="font-size:11px;color:#0ea5e9">📖 FLUIDEZ</b><br/>${["Velocidad","Precisión","Prosodia"].map(dim=>`<div style="font-size:11px"><b>${dim}:</b> ${CORTES.map(c=>`<span style="margin-right:10px"><b>${c}:</b> <span style="color:${cL(e["fluidez_"+dim+"_"+c])}">${e["fluidez_"+dim+"_"+c]||"—"}</span></span>`).join("")}</div>`).join("")}</div>`:""}
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           <div><b style="font-size:11px;color:#4338ca">📚 LENGUA</b>${iL.map(ind=>`<div style="font-size:10px;margin-top:3px">${ind}: <b style="color:${cL(e.indicadores?.["lengua_"+g+"_"+ind])}">${e.indicadores?.["lengua_"+g+"_"+ind]||"—"}</b></div>`).join("")}</div>
