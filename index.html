@@ -160,7 +160,7 @@ let STATE={
   busq:"",busqEst:"",
   modal:null,del:null,
   corte:"Marzo",
-  dirGrado:"1°",dirSeccion:"A",dirTab:"resumen",nivelesSeccion:"todas",
+  dirGrado:"1°",dirSeccion:"A",dirTab:"resumen",nivelesSeccion:"todas",soloPendientes:false,
   filtroMarca:"todos",
 };
 function setState(p){Object.assign(STATE,typeof p==="function"?p(STATE):p);render();}
@@ -886,12 +886,28 @@ function vistaSeccion(){
   ${STATE.modal?modalEstudiante():""}${STATE.del?modalConfirmarBorrar():""}`;
 }
 
+function camposFaltantes(e,g,corte){
+  const falt=[];
+  if(e.marca){
+    if(["1°","2°","3°"].includes(g) && !e[`nivel_escritura_ajuste_${corte}`])falt.push("Escritura (ajuste)");
+    return falt;
+  }
+  if(["1°","2°","3°"].includes(g) && !e[`escritura_${corte}`])falt.push("Escritura");
+  if(!e[`procLector_${corte}`])falt.push("Proced. Lector");
+  if(["3°","4°","5°","6°"].includes(g)){
+    if(!e[`fluidez_Velocidad_${corte}`]||!e[`fluidez_Precisión_${corte}`]||!e[`fluidez_Prosodia_${corte}`])falt.push("Fluidez");
+  }
+  return falt;
+}
 function vistaCarga(){
   const secId=STATE.seccion.id;
+  const g=STATE.seccion.grado;
   let ests=(STATE.allData[secId]||[]);
   if(STATE.filtroMarca==="especiales")ests=ests.filter(e=>e.marca);
   else if(STATE.filtroMarca==="regulares")ests=ests.filter(e=>!e.marca);
   if(STATE.busqEst)ests=ests.filter(e=>`${e.apellido} ${e.nombre}`.toLowerCase().includes(STATE.busqEst.toLowerCase()));
+  const totalPendientes=(STATE.allData[secId]||[]).filter(e=>camposFaltantes(e,g,STATE.corte).length>0).length;
+  if(STATE.soloPendientes)ests=ests.filter(e=>camposFaltantes(e,g,STATE.corte).length>0);
   ests=ests.sort((a,b)=>a.apellido.localeCompare(b.apellido));
   const imp=IMPORTS_PENDIENTES[secId];
   return`${imp?`<div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
@@ -902,14 +918,16 @@ function vistaCarga(){
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
       <input style="width:180px" value="${STATE.busqEst}" placeholder="Buscar estudiante..." oninput="setState({busqEst:this.value})"/>
       ${selectorCorte()}
+      <button onclick="setState({soloPendientes:!STATE.soloPendientes})" style="padding:6px 14px;border-radius:8px;border:1.5px solid;font-weight:700;font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;border-color:${STATE.soloPendientes?"#dc2626":"#fde68a"};background:${STATE.soloPendientes?"#dc2626":"#fffbeb"};color:${STATE.soloPendientes?"#fff":"#92400e"}">⚠️ ${totalPendientes} sin cargar (${STATE.corte})${STATE.soloPendientes?" · viendo solo estos":""}</button>
       <span style="font-size:12px;color:#94a3b8;font-weight:600">${ests.length} estudiantes</span>
     </div>
     <button class="btn-primary" onclick="abrirModal()">+ Agregar estudiante</button>
   </div>
   ${ests.length===0?`<div style="text-align:center;padding:48px;color:#94a3b8;border:2px dashed #fda4af;border-radius:14px">
-    <div style="font-size:44px;margin-bottom:10px">👤</div><p style="font-weight:700">Sin estudiantes</p></div>`:
+    <div style="font-size:44px;margin-bottom:10px">👤</div><p style="font-weight:700">${STATE.soloPendientes?"Nadie pendiente para este corte 🎉":"Sin estudiantes"}</p></div>`:
   ests.map(e=>{
     const esEsp=!!e.marca;
+    const falt=camposFaltantes(e,g,STATE.corte);
     return`<div style="background:${esEsp?"#fdf4ff":"#fff7f7"};border:1.5px solid ${esEsp?"#f0abfc":"#fda4af44"};border-radius:12px;padding:12px 16px;margin-bottom:8px">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
         <div>
@@ -924,6 +942,7 @@ function vistaCarga(){
           <button onclick='confirmarBorrar(${JSON.stringify(e).replace(/'/g,"&#39;")})' style="background:#fef2f2;color:#ef4444;border:none;border-radius:7px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif">✕</button>
         </div>
       </div>
+      ${falt.length>0?`<div style="margin-top:8px;background:#fef2f2;border-radius:8px;padding:6px 10px;font-size:11px;color:#dc2626;font-weight:700">⚠️ Falta cargar (${STATE.corte}): ${falt.join(", ")}</div>`:""}
       ${esEsp?`<div style="margin-top:8px;background:#fdf4ff;border-radius:8px;padding:8px;font-size:11px;color:#a21caf;font-weight:700">♿ Ajustes Razonables · ${e.marca} · Res. 311/16 CFE</div>`:""}
       ${e.trayectoria?`<div style="margin-top:8px;font-size:11px;color:#64748b;font-style:italic;border-top:1px solid #fda4af44;padding-top:6px">📝 ${e.trayectoria}</div>`:""}
     </div>`;
@@ -1142,60 +1161,74 @@ function modalConfirmarBorrar(){
 // ── NIVELES POR CORTE (gráfico circular) ──────────────
 function contarNiveles(g,corte,campo,niveles,campoAjuste,seccion){
   const counts={};niveles.forEach(n=>counts[n]=0);
-  let total=0;
+  let total=0,roster=0;
   const secs=(seccion&&seccion!=="todas")?[seccion]:SECCIONES;
   secs.forEach(sc=>{
     (STATE.allData[`${g}${sc}`]||[]).forEach(e=>{
+      const elegible=e.marca?!!campoAjuste:true;
+      if(!elegible)return;
+      roster++;
       let v;
       if(e.marca){ if(campoAjuste) v=e[`${campoAjuste}_${corte}`]; }
       else v=e[`${campo}_${corte}`];
       if(v && Object.prototype.hasOwnProperty.call(counts,v)){counts[v]++;total++;}
     });
   });
-  return{counts,total};
+  return{counts,total,roster};
 }
 function contarFluidez(g,corte,dim,seccion){
   const counts={};LOGRO.forEach(n=>counts[n]=0);
-  let total=0;
+  let total=0,roster=0;
   const secs=(seccion&&seccion!=="todas")?[seccion]:SECCIONES;
   secs.forEach(sc=>{
     (STATE.allData[`${g}${sc}`]||[]).forEach(e=>{
       if(e.marca)return;
+      roster++;
       const v=e[`fluidez_${dim}_${corte}`];
       if(v && Object.prototype.hasOwnProperty.call(counts,v)){counts[v]++;total++;}
     });
   });
-  return{counts,total};
+  return{counts,total,roster};
 }
-function buildConic(counts,colorMap,orden,total){
-  if(!total)return"#e2e8f0";
+function buildConic(counts,colorMap,orden,total,roster){
+  const denom=roster||total;
+  if(!denom)return"#e2e8f0";
   let acc=0;const stops=[];
   orden.forEach(k=>{
     const v=counts[k]||0;
     if(v>0){
-      const start=acc/total*360;acc+=v;const end=acc/total*360;
+      const start=acc/denom*360;acc+=v;const end=acc/denom*360;
       stops.push(`${colorMap[k]} ${start}deg ${end}deg`);
     }
   });
+  const sinCargar=denom-total;
+  if(sinCargar>0){
+    const start=acc/denom*360;
+    stops.push(`#e2e8f0 ${start}deg 360deg`);
+  }
   return stops.join(", ");
 }
 function panelDonut(corte,color,data,colorMap,orden){
-  const{counts,total}=data;
-  const gradient=buildConic(counts,colorMap,orden,total);
+  const{counts,total,roster}=data;
+  const denom=roster||total;
+  const gradient=buildConic(counts,colorMap,orden,total,denom);
+  const sinCargar=denom-total;
   return`<div style="text-align:center;min-width:150px">
     <div style="font-size:11px;font-weight:700;color:${color};margin-bottom:8px">📅 ${corte}</div>
     <div style="position:relative;width:120px;height:120px;margin:0 auto">
-      <div style="width:120px;height:120px;border-radius:50%;background:${total?`conic-gradient(${gradient})`:"#e2e8f0"}"></div>
+      <div style="width:120px;height:120px;border-radius:50%;background:${denom?`conic-gradient(${gradient})`:"#e2e8f0"}"></div>
       <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:68px;height:68px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 1px 4px #0002">
-        <div style="font-size:17px;font-weight:900;color:#1e293b">${total}</div>
+        <div style="font-size:15px;font-weight:900;color:#1e293b">${total}/${denom}</div>
         <div style="font-size:8px;color:#94a3b8">cargados</div>
       </div>
     </div>
     <div style="margin-top:10px;display:flex;flex-direction:column;gap:3px;text-align:left;max-width:160px;margin-left:auto;margin-right:auto">
       ${orden.filter(n=>counts[n]>0).map(n=>{
-        const pct=total?Math.round(counts[n]/total*100):0;
+        const pct=denom?Math.round(counts[n]/denom*100):0;
         return`<div style="display:flex;align-items:center;gap:5px;font-size:10px"><span style="width:8px;height:8px;border-radius:50%;background:${colorMap[n]};display:inline-block;flex-shrink:0"></span><span style="color:#475569;flex:1">${n}</span><span style="font-weight:700;color:${colorMap[n]}">${pct}%</span></div>`;
-      }).join("")||`<div style="font-size:10px;color:#cbd5e1;text-align:center">Sin datos</div>`}
+      }).join("")}
+      ${sinCargar>0?`<div style="display:flex;align-items:center;gap:5px;font-size:10px"><span style="width:8px;height:8px;border-radius:50%;background:#cbd5e1;display:inline-block;flex-shrink:0"></span><span style="color:#94a3b8;flex:1">Sin cargar</span><span style="font-weight:700;color:#94a3b8">${sinCargar} (${Math.round(sinCargar/denom*100)}%)</span></div>`:""}
+      ${!denom?`<div style="font-size:10px;color:#cbd5e1;text-align:center">Sin datos</div>`:""}
     </div>
   </div>`;
 }
@@ -1318,10 +1351,12 @@ function vistaDirectivo(){
           const total=(STATE.allData[sid]||[]).length;
           const esp=(STATE.allData[sid]||[]).filter(e=>e.marca).length;
           const reg=(STATE.allData[sid]||[]).filter(e=>!e.marca);
+          const pend=(STATE.allData[sid]||[]).filter(e=>camposFaltantes(e,g,STATE.corte).length>0).length;
           return`<div style="background:#fff7f7;border-radius:12px;padding:16px;border:1.5px solid #fda4af44;cursor:pointer" onclick="setState({dirSeccion:'${sc}'})">
             <div style="font-weight:700;font-size:15px;color:#1e293b;margin-bottom:8px">${g} Sección ${sc}</div>
             <div style="font-size:24px;font-weight:900;color:${total>0?"#be185d":"#cbd5e1"}">${total} <span style="font-size:12px;font-weight:400;color:#94a3b8">estudiantes</span></div>
             ${esp>0?`<div style="font-size:12px;color:#a21caf;font-weight:700;margin-top:4px">♿ ${esp} con ajustes</div>`:""}
+            ${pend>0?`<div style="font-size:12px;color:#dc2626;font-weight:700;margin-top:4px">⚠️ ${pend} sin cargar (${STATE.corte})</div>`:total>0?`<div style="font-size:12px;color:#16a34a;font-weight:700;margin-top:4px">✅ Completo (${STATE.corte})</div>`:""}
             ${["1°","2°","3°"].includes(g)?`<div style="margin-top:10px"><div style="font-size:10px;font-weight:700;color:#7c3aed">✍️ Escritura (${STATE.corte})</div>${resumenNivel(reg,"escritura",STATE.corte,NIV_ESCRITURA)}</div>`:""}
             <div style="margin-top:6px"><div style="font-size:10px;font-weight:700;color:#db2877">📖 Proced. Lector (${STATE.corte})</div>${resumenNivel(reg,"procLector",STATE.corte,PROC_LECTOR)}</div>
             ${["3°","4°","5°","6°"].includes(g)?`<div style="margin-top:10px">
