@@ -893,9 +893,11 @@ function camposFaltantes(e,g,corte){
     return falt;
   }
   if(["1°","2°","3°"].includes(g) && !e[`escritura_${corte}`])falt.push("Escritura");
-  if(!e[`procLector_${corte}`])falt.push("Proced. Lector");
-  if(["3°","4°","5°","6°"].includes(g)){
-    if(!e[`fluidez_Velocidad_${corte}`]||!e[`fluidez_Precisión_${corte}`]||!e[`fluidez_Prosodia_${corte}`])falt.push("Fluidez");
+  if(corte!=="Marzo"){
+    if(!e[`procLector_${corte}`])falt.push("Proced. Lector");
+    if(["3°","4°","5°","6°"].includes(g)){
+      if(!e[`fluidez_Velocidad_${corte}`]||!e[`fluidez_Precisión_${corte}`]||!e[`fluidez_Prosodia_${corte}`])falt.push("Fluidez");
+    }
   }
   return falt;
 }
